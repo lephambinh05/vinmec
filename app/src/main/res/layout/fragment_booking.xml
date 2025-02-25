@@ -95,6 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <Button
+                        android:id="@+id/btnMale"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
@@ -105,6 +106,7 @@
                         android:backgroundTint="#EDEDED"
                         android:layout_weight="1"/>
                     <Button
+                        android:id="@+id/btnFemale"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
@@ -234,6 +236,7 @@
                         android:textStyle="bold"
                         />
                     <EditText
+                        android:id="@+id/editTextReason"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginTop="4dp"
@@ -241,6 +244,7 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/btnBook"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ĐẶT HẸN"

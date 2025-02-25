@@ -116,29 +116,27 @@
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="65dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:layout_marginHorizontal="10sp"
-                            android:padding="8dp">
+                            android:id="@+id/layout_booking"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="10dp"
+                            android:background="@drawable/rounded_full_corner"
+                            android:clickable="true"
+                            android:focusable="true">
 
                             <ImageView
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:src="@drawable/chat"
-                                android:background="@drawable/rounded_full_corner"
-                                android:clipToOutline="true"
-                                android:contentDescription="Image description" />
+                                android:src="@drawable/calendar" />
 
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Hỏi đáp"
-                                android:textSize="14sp"
-                                android:textColor="#000"
-                                android:gravity="center" />
+                                android:layout_height="match_parent"
+                                android:textSize="22sp"
+                                android:gravity="center_vertical"
+                                android:layout_marginLeft="8dp"
+                                android:text="Đặt lịch hẹn" />
                         </LinearLayout>
 
                         <LinearLayout
