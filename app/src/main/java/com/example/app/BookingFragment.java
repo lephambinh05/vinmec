@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.app.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -22,27 +23,25 @@ import java.util.Map;
 
 public class BookingFragment extends Fragment {
 
-    private EditText edtName, edtDate, edtPhone, edtReason;
+    private EditText edtName, edtPhone, edtReason;
     private Button btnMale, btnFemale, btnBook;
     private String selectedDate;
-    private FirebaseFirestore firestoreDb;
-    private String selectedGender = "Nam";  // Mặc định
+    private FirebaseFirestore db;
+    private String selectedGender = "Nam"; // Mặc định là Nam
 
     public BookingFragment() {
         // Constructor mặc định
     }
-    public void setFirestore(FirebaseFirestore firestore) {
-        this.firestoreDb = firestore;
-    }
 
+    // Nhận Firestore từ MainActivity
+    public void setFirestore(FirebaseFirestore db) {
+        this.db = db;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_booking, container, false);
-
-        // Khởi tạo Firestore
-        firestoreDb = FirebaseFirestore.getInstance();
 
         // Ánh xạ view
         edtName = view.findViewById(R.id.editTextText);
@@ -51,34 +50,6 @@ public class BookingFragment extends Fragment {
         btnMale = view.findViewById(R.id.btnMale);
         btnFemale = view.findViewById(R.id.btnFemale);
         btnBook = view.findViewById(R.id.btnBook);
-
-        // Ánh xạ các nút chọn ngày
-        Button btnToday = view.findViewById(R.id.tvSelectedDateToday);
-        Button btnTomorrow = view.findViewById(R.id.tvSelectedDateTomorrow);
-        Button btnNextDay = view.findViewById(R.id.tvSelectedDateNextDay);
-        Button btnOtherDate = view.findViewById(R.id.tvSelectedDateOther);
-
-        // Mặc định chọn ngày hôm nay
-        selectedDate = btnToday.getText().toString();
-        btnToday.setBackgroundColor(getResources().getColor(R.color.blue_sky));
-
-        // Xử lý chọn ngày khám mong muốn
-        View.OnClickListener dateClickListener = v -> {
-            resetDateButtons(btnToday, btnTomorrow, btnNextDay, btnOtherDate);
-            Button clickedButton = (Button) v;
-            selectedDate = clickedButton.getText().toString();
-            clickedButton.setBackgroundColor(getResources().getColor(R.color.blue_sky));
-
-            // Nếu bấm vào "Ngày khác", mở DatePicker
-            if (v.getId() == R.id.tvSelectedDateOther) {
-                showDatePicker(clickedButton);
-            }
-        };
-
-        btnToday.setOnClickListener(dateClickListener);
-        btnTomorrow.setOnClickListener(dateClickListener);
-        btnNextDay.setOnClickListener(dateClickListener);
-        btnOtherDate.setOnClickListener(dateClickListener);
 
         // Xử lý chọn giới tính
         btnMale.setOnClickListener(v -> {
@@ -98,35 +69,13 @@ public class BookingFragment extends Fragment {
 
         return view;
     }
-    private void resetDateButtons(Button... buttons) {
-        for (Button button : buttons) {
-            button.setBackgroundColor(getResources().getColor(R.color.gray));
-        }
-    }
-
-
-    private void showDatePicker(Button targetButton) {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                (view, year1, month1, day1) -> {
-                    String date = day1 + "/" + (month1 + 1) + "/" + year1;
-                    targetButton.setText(date);
-                    selectedDate = date; // Lưu ngày đã chọn
-                }, year, month, day);
-        datePickerDialog.show();
-    }
-
 
     public void saveAppointment() {
         String name = edtName.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
         String reason = edtReason.getText().toString().trim();
 
-        if (name.isEmpty() || selectedDate.isEmpty() || phone.isEmpty() || reason.isEmpty()) {
+        if (name.isEmpty() || selectedDate == null || phone.isEmpty() || reason.isEmpty()) {
             showToast("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
@@ -134,9 +83,8 @@ public class BookingFragment extends Fragment {
         saveToFirestore(name, selectedDate, phone, reason);
     }
 
-
     private void saveToFirestore(String name, String date, String phone, String reason) {
-        if (firestoreDb == null) {
+        if (db == null) {
             showToast("Lỗi: Firestore chưa được khởi tạo!");
             return;
         }
@@ -149,7 +97,7 @@ public class BookingFragment extends Fragment {
         appointment.put("gender", selectedGender);
         appointment.put("status", "Chờ xác nhận");
 
-        firestoreDb.collection("appointments")
+        db.collection("appointments")
                 .add(appointment)
                 .addOnSuccessListener(documentReference -> {
                     showToast("Đặt lịch thành công!");
@@ -160,7 +108,6 @@ public class BookingFragment extends Fragment {
 
     private void resetFields() {
         edtName.setText("");
-        edtDate.setText("");
         edtPhone.setText("");
         edtReason.setText("");
     }
