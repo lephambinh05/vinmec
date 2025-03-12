@@ -5,9 +5,6 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import com.example.app.ui.login.LoginFragment;
-import com.example.app.BookingFragment;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -35,13 +32,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Load màn hình đăng nhập khi ứng dụng mở
         if (savedInstanceState == null) {
-            loadFragment(new LoginFragment());
+            loadFragment(new HomeFragment(), false);
         }
     }
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment(Fragment fragment, boolean addToBackStack) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment != null && currentFragment.getClass().equals(fragment.getClass())) {
+            return; // Không load lại nếu fragment đã mở
+        }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
         transaction.commit();
     }
 
@@ -49,6 +53,6 @@ public class MainActivity extends AppCompatActivity {
     public void openBookingFragment() {
         BookingFragment bookingFragment = new BookingFragment();
         bookingFragment.setFirestore(db); // Truyền Firestore vào Fragment
-        loadFragment(bookingFragment);
+        loadFragment(bookingFragment, true);
     }
 }
