@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("Firebase", "Firestore initialized successfully");
 
-        // Load màn hình đăng nhập khi ứng dụng mở
+        // Load màn hình chính khi ứng dụng mở
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment(), false);
         }
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public void openBookingFragment() {
         BookingFragment bookingFragment = new BookingFragment();
         bookingFragment.setFirestore(db); // Truyền Firestore vào Fragment
+        Log.d("Firestore", "Firestore instance passed to BookingFragment: " + (db != null));
         loadFragment(bookingFragment, true);
     }
 }
