@@ -1,7 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Màu cơ bản -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue_sky">#3CD8EF</color>
     <color name="gray">#808080</color>
+
+    <!-- Màu chủ đạo -->
+    <color name="primaryColor">#6200EE</color>
+    <color name="primaryDarkColor">#3700B3</color>
+    <color name="accentColor">#03DAC5</color>
+
+    <!-- Màu xanh dương -->
+    <color name="blue_sky">#3CD8EF</color> <!-- Xanh trời -->
+    <color name="blue_dark">#1E88E5</color> <!-- Xanh dương đậm -->
+    <color name="blue_light">#64B5F6</color> <!-- Xanh dương nhạt -->
+
+    <!-- Màu đỏ -->
+    <color name="red">#F44336</color>
+    <color name="red_dark">#D32F2F</color>
+    <color name="red_light">#FFCDD2</color>
+
+    <!-- Màu xanh lá -->
+    <color name="green">#4CAF50</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="green_light">#C8E6C9</color>
+
+    <!-- Màu vàng -->
+    <color name="yellow">#FFEB3B</color>
+    <color name="yellow_dark">#FBC02D</color>
+    <color name="yellow_light">#FFF9C4</color>
+
+    <!-- Màu cam -->
+    <color name="orange">#FF9800</color>
+    <color name="orange_dark">#E65100</color>
+    <color name="orange_light">#FFE0B2</color>
+
+    <!-- Màu tím -->
+    <color name="purple">#9C27B0</color>
+    <color name="purple_dark">#7B1FA2</color>
+    <color name="purple_light">#E1BEE7</color>
+
+    <!-- Màu hồng -->
+    <color name="pink">#E91E63</color>
+    <color name="pink_dark">#C2185B</color>
+    <color name="pink_light">#F8BBD0</color>
+
+    <!-- Màu nâu -->
+    <color name="brown">#795548</color>
+    <color name="brown_dark">#5D4037</color>
+    <color name="brown_light">#D7CCC8</color>
 </resources>

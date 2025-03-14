@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class HomeFragment extends Fragment {
@@ -28,6 +30,11 @@ public class HomeFragment extends Fragment {
             transaction.commit();
         });
 
+        LinearLayout layoutContact = view.findViewById(R.id.layoutContact);
+        layoutContact.setOnClickListener(v -> {
+            BottomSheetContact bottomSheet = new BottomSheetContact(requireContext());
+            bottomSheet.showBottomSheet();
+        });
         return view;
     }
 }
