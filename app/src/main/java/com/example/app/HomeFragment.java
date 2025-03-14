@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +20,28 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Tìm LinearLayout (hoặc nút) để bắt sự kiện click
+
         LinearLayout bookingLayout = view.findViewById(R.id.layout_booking);
+        LinearLayout layoutBooking = view.findViewById(R.id.layoutBooking);
 
         bookingLayout.setOnClickListener(v -> {
-            // Chuyển đến FragmentBooking
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new BookingFragment());
-            transaction.addToBackStack(null); // Quay lại được Fragment trước đó
-            transaction.commit();
+            Intent intent = new Intent(getActivity(), AppointmentActivity.class);
+            intent.putExtra("fragment_type", "booking");
+            startActivity(intent);
         });
 
+        layoutBooking.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AppointmentActivity.class);
+            intent.putExtra("fragment_type", "quick_booking");
+            startActivity(intent);
+        });
+
+
+        LinearLayout layoutCustomerCare = view.findViewById(R.id.layoutCustomerCare);
+        layoutCustomerCare.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), CustomerCareActivity.class);
+            startActivity(intent);
+        });
         LinearLayout layoutContact = view.findViewById(R.id.layoutContact);
         layoutContact.setOnClickListener(v -> {
             BottomSheetContact bottomSheet = new BottomSheetContact(requireContext());

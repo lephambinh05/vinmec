@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".CustomerCareActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:drawableLeft="@drawable/close_24dp_5f6368_fill0_wght400_grad0_opsz24"
+                android:padding="5dp"
+                android:backgroundTint="@color/white"
+                android:drawableTint="@color/black"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:text="Thông tin cần hỗ trợ"/>
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/baseline_people_alt_24"
+                android:drawablePadding="5dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:text="Người gửi yêu cầu"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/pen_line_svgrepo_com"
+                android:hint="Họ tên đầy đủ"
+                android:layout_marginBottom="5dp"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/birthday_cake_svgrepo_com"
+                android:hint="Ngày sinh"
+                android:layout_marginBottom="5dp"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/baseline_phone_24"
+                android:hint="Số điện thoại"
+                android:layout_marginBottom="5dp"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/baseline_email_24"
+                android:hint="Địa chỉ email"
+                android:layout_marginBottom="5dp"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#F6F3F3"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/pen_pencil_svgrepo_com"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:drawablePadding="10dp"
+                android:text="Nội dung yêu cầu"/>
+            <EditText
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="16sp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/rounded_corner"
+                android:padding="10dp"
+                android:backgroundTint="#E7E6E6"
+                android:hint="Bệnh viện Vinmec đã thăm khám"
+                android:layout_marginBottom="5dp"
+                />
+            <EditText
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:drawablePadding="5dp"
+                android:background="@drawable/rounded_corner"
+                android:padding="10dp"
+                android:backgroundTint="#E7E6E6"
+                android:hint="Chi tiết vấn đề cần hỗ trợ. Ví dụ: tôi muốn làm thủ tục bảo hiểm cho lần khám ngày 1/1"
+                android:layout_marginBottom="5dp"
+                />
+            <Button
+                android:id="@+id/btnUploadImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tải ảnh lên"
+                android:backgroundTint="@color/green_light"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tải ảnh lên"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="@color/blue_light"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

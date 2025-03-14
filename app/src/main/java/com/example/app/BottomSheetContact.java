@@ -84,13 +84,17 @@ public class BottomSheetContact {
             if (task.isSuccessful() && task.getResult() != null) {
                 hospitalList.clear();
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    String address = document.getString("Address");
-                    String phone = document.getString("phone");
+                    String address = document.getString("Address"); // Lấy địa chỉ
+                    String phone = document.getString("phone"); // Lấy số điện thoại
 
+                    if (address != null && phone != null) {
+                        hospitalList.add(address + " - " + phone); // Thêm vào danh sách
+                    }
                 }
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged(); // Cập nhật ListView
             }
         });
     }
+
 
 }

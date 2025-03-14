@@ -245,6 +245,7 @@
                     android:textStyle="bold"/>
 
                 <LinearLayout
+                    android:id="@+id/layoutCustomerCare"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -255,7 +256,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/home_svgrepo_com__1_"
+                        android:src="@drawable/customercare"
                         />
 
                     <TextView
@@ -268,6 +269,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layoutBooking"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -278,7 +280,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/home_svgrepo_com__1_"
+                        android:src="@drawable/datlichnhanh"
                         />
 
                     <TextView
@@ -287,7 +289,7 @@
                         android:textSize="22sp"
                         android:gravity="center_vertical"
                         android:layout_marginLeft="8sp"
-                        android:text="Cổng chăm sóc khách hàng" />
+                        android:text="Đặt lịch nhanh" />
                 </LinearLayout>
             </LinearLayout>
 
