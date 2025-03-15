@@ -2,33 +2,57 @@ package com.example.app;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+//import com.example.app.ui.login.LoginFragment;
+import com.example.app.BookingFragment;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.example.app.ui.login.LoginFragment;
-import com.example.app.HomeFragment;
-import com.example.app.BookingFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db; // Firestore Database
-    private FirebaseAuth mAuth; // Firebase Authentication
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        Button  btnOpenDrawer = findViewById(R.id.btnOpenDrawer);
+
+        btnOpenDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
         // Khởi tạo Firebase
         FirebaseApp.initializeApp(this);
-        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         // Cấu hình Firestore (Bật cache offline)
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
@@ -37,17 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("Firebase", "Firestore initialized successfully");
 
-        // Kiểm tra trạng thái đăng nhập
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // Load màn hình đăng nhập khi ứng dụng mở
         if (savedInstanceState == null) {
-            if (currentUser != null) {
-                Log.d("Auth", "User is logged in: " + currentUser.getEmail());
-                loadFragment(new HomeFragment()); // Nếu đã đăng nhập, mở HomeFragment
-            } else {
-                Log.d("Auth", "User is NOT logged in");
-                loadFragment(new LoginFragment()); // Nếu chưa đăng nhập, mở LoginFragment
-            }
+            loadFragment(new HomeFragment());
         }
+
     }
 
     private void loadFragment(Fragment fragment) {
