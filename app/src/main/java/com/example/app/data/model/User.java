@@ -1,19 +1,32 @@
 package com.example.app.data.model;
 
-
-
-import java.io.Serializable;
-
-public class User implements Serializable {
+public class User {
+    private String userId;
     private String username;
-    private String password;
     private String email;
     private String phone;
-    private int sex;
-    private String avatarUrl; // Đường dẫn ảnh đại diện
+    private int gender; // 1 = Nam, 0 = Nữ
 
-
+    // Constructor mặc định (cần thiết cho Firestore)
     public User() {
+    }
+
+    // Constructor có tham số
+    public User(String userId, String username, String email, String phone, int gender) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+    }
+
+    // Getter và Setter
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -22,14 +35,6 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -48,19 +53,11 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
-    public int getSex() {
-        return sex;
+    public int getGender() {
+        return gender;
     }
 
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
-    // Getter và Setter cho Avatar
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 }

@@ -1,113 +1,105 @@
 package com.example.app.ui.login;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.data.model.User;
-import com.google.gson.Gson;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
-    private Button buttonRegister;
-    private Button btBack;
-    private RadioGroup radioGroupGender;
-    private EditText edMK, edNLMK, edMail, edSDT, edTDN;
-    private SharedPreferences.Editor editor;
-    SharedPreferences sharedPreferences;
-    private final Gson gson=new Gson();
 
+    private EditText edUsername, edPassword, edConfirmPassword, edEmail, edPhone;
+    private RadioGroup radioGroupGender;
+    private Button buttonRegister, buttonBack;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_register);
-        // Ánh xạ các View
-        anhxadulieu();
-        //khai bao share pre
-        sharedPreferences=getSharedPreferences(Utils.SHARE_PREFERENCES_APP, Context.MODE_PRIVATE);
-        editor=sharedPreferences.edit();
-        // lay du lieu
-        anhxadulieu();
-        taosukien();
-    }
-    void anhxadulieu(){
-        // Ánh xạ các View
-        btBack=findViewById(R.id.btBack);
-        edMK = findViewById(R.id.edMK);
-        edNLMK = findViewById(R.id.edNLMK);
-        edMail = findViewById(R.id.edMail);
-        edSDT = findViewById(R.id.edSDT);
-        edTDN = findViewById(R.id.edTDN);
-        buttonRegister = findViewById(R.id.buttonRegister);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        edUsername = findViewById(R.id.edTDN);
+        edPassword = findViewById(R.id.edMK);
+        edConfirmPassword = findViewById(R.id.edNLMK);
+        edEmail = findViewById(R.id.edMail);
+        edPhone = findViewById(R.id.edSDT);
         radioGroupGender = findViewById(R.id.radioGroupGender);
+        buttonRegister = findViewById(R.id.buttonRegister);
+        buttonBack = findViewById(R.id.btBack);
+
+        buttonRegister.setOnClickListener(view -> registerUser());
+        buttonBack.setOnClickListener(view -> finish());
     }
-    void taosukien(){
-        buttonRegister.setOnClickListener(view ->sukienRegister() );
-        btBack.setOnClickListener(view -> finish());
+
+    private void registerUser() {
+        String username = edUsername.getText().toString().trim();
+        String password = edPassword.getText().toString().trim();
+        String confirmPassword = edConfirmPassword.getText().toString().trim();
+        String email = edEmail.getText().toString().trim();
+        String phone = edPhone.getText().toString().trim();
+
+        if (!validateInput(username, password, confirmPassword, email)) return;
+
+        // Đăng ký trên Firebase Authentication
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            // Lưu dữ liệu vào Firestore
+                            saveUserToFirestore(firebaseUser.getUid(), username, email, phone);
+                        }
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
-    void sukienRegister(){
-        String tdn = edTDN.getText().toString().trim();
-        String mk = edMK.getText().toString().trim();
-        String nlmk = edNLMK.getText().toString().trim();
-        String mail = edMail.getText().toString().trim();
-        String sdt = edSDT.getText().toString().trim();
-        // neu gender=1 thi la nam con =0 thi la nu
-        int sex=1;
-        boolean isvalid=checkUserName(tdn)&&checkPassWord(mk,nlmk);
-        // neu du lieu hop le, tao doi tuong user de luu vao share preference
-        if (isvalid){
-            User userNew=new User();
-            userNew.setUsername(tdn);
-            userNew.setPassword(mk);
-            userNew.setEmail(mail);
-            userNew.setPhone(sdt);
-            // lay radio button ma ng dung tick
-            int sexSelected=radioGroupGender.getCheckedRadioButtonId();
-            if(sexSelected==R.id.radioButtonFemale){
-                sex=0;
-            }
-            userNew.setSex(sex);
-            //vì user là 1 object nên phải convert qua dạng string với format là gson để lưu trữ trong share preference (vì đã biến đổi thành file xml nên p chuyển thành string mới lưu trữ được
-            String userString=gson.toJson(userNew);
-            editor.putString(Utils.KEY_USER,userString);
-            editor.commit();
-            // dùng TOAST để thông báo đăng ký thành công
-            Toast.makeText(RegisterActivity.this,"đăng ký tài khoản thành công",Toast.LENGTH_LONG).show();
-            //finish regis activity
-            finish();
-        }
+
+    private void saveUserToFirestore(String userId, String username, String email, String phone) {
+        int gender = (radioGroupGender.getCheckedRadioButtonId() == R.id.radioButtonFemale) ? 0 : 1;
+
+        User newUser = new User(userId, username, email, phone, gender);
+
+        db.collection("users").document(userId)
+                .set(newUser)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    finish();
+                })
+                .addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Lỗi lưu dữ liệu!", Toast.LENGTH_LONG).show());
     }
-    private boolean checkUserName(String tdn){
-        if (tdn.isEmpty() ){
-            edTDN.setError("vui lòng nhập tên đăng nhập");
+
+    private boolean validateInput(String username, String password, String confirmPassword, String email) {
+        if (username.isEmpty() || username.length() <= 5) {
+            edUsername.setError("Tên đăng nhập phải dài hơn 5 ký tự");
             return false;
         }
-        if (tdn.length()<=5){
-            edTDN.setError("tên đăng nhập không đc dưới 5 kí tự");
+        if (password.isEmpty() || password.length() <= 5) {
+            edPassword.setError("Mật khẩu phải dài hơn 5 ký tự");
             return false;
         }
-        return true;
-    }
-    private boolean checkPassWord(String mk,String nlmk){
-        if(mk.isEmpty()){
-            edMK.setError("vui lòng nhập mật khẩu");
+        if (!password.equals(confirmPassword)) {
+            edConfirmPassword.setError("Xác nhận mật khẩu không khớp");
             return false;
         }
-        if(mk.length()<=5){
-            edMK.setError("mật khẩu k đc dưới 5 kí tự");
-            return false;
-        }
-        if(!mk.equals(nlmk)){
-            edNLMK.setError("xác nhận mật khẩu không khớp");
+        if (email.isEmpty()) {
+            edEmail.setError("Vui lòng nhập email");
             return false;
         }
         return true;

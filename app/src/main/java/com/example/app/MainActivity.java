@@ -1,33 +1,53 @@
 package com.example.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.app.ui.login.LoginActivity;
+import com.example.app.HomeFragment;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
-import com.example.app.ui.login.LoginFragment;
-import com.example.app.HomeFragment;
-import com.example.app.BookingFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseFirestore db; // Firestore Database
-    private FirebaseAuth mAuth; // Firebase Authentication
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo Firebase
-        FirebaseApp.initializeApp(this);
+        // Ẩn thanh trạng thái
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        drawerLayout = findViewById(R.id.drawer_layout);
+        Button btnOpenDrawer = findViewById(R.id.btnOpenDrawer);
+
+        // Kiểm tra đăng nhập
+        checkUserLogin();
 
         // Cấu hình Firestore (Bật cache offline)
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
@@ -37,17 +57,51 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("Firebase", "Firestore initialized successfully");
 
-        // Kiểm tra trạng thái đăng nhập
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (savedInstanceState == null) {
-            if (currentUser != null) {
-                Log.d("Auth", "User is logged in: " + currentUser.getEmail());
-                loadFragment(new HomeFragment()); // Nếu đã đăng nhập, mở HomeFragment
-            } else {
-                Log.d("Auth", "User is NOT logged in");
-                loadFragment(new LoginFragment()); // Nếu chưa đăng nhập, mở LoginFragment
+        // Xử lý mở Navigation Drawer
+        btnOpenDrawer.setOnClickListener(v -> {
+            if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.openDrawer(GravityCompat.START);
             }
+        });
+
+        // Khởi tạo menu
+        initMenu();
+
+        // Load HomeFragment mặc định
+        if (savedInstanceState == null) {
+            loadFragment(new HomeFragment());
         }
+    }
+
+    private void checkUserLogin() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
+
+    private void initMenu() {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+
+            if (item.getItemId() == R.id.nav_home) {
+                selectedFragment = new HomeFragment();
+            } else if (item.getItemId() == R.id.nav_booking) {
+                selectedFragment = new BookingFragment();
+            } else if (item.getItemId() == R.id.nav_logout) {
+                showLogoutDialog();
+                return true;
+            }
+
+            if (selectedFragment != null) {
+                loadFragment(selectedFragment);
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
     }
 
     private void loadFragment(Fragment fragment) {
@@ -56,10 +110,25 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    // Mở BookingFragment
-    public void openBookingFragment() {
-        BookingFragment bookingFragment = new BookingFragment();
-        bookingFragment.setFirestore(db); // Truyền Firestore vào Fragment
-        loadFragment(bookingFragment);
+    private void showLogoutDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Đăng xuất")
+                .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
+                .setPositiveButton("Có", (dialog, which) -> {
+                    mAuth.signOut();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                })
+                .setNegativeButton("Không", null)
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
