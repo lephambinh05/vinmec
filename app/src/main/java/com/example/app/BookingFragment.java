@@ -1,5 +1,10 @@
 package com.example.app;
 
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +25,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +40,9 @@ public class BookingFragment extends Fragment {
     private String selectedDate = null;
     private FirebaseFirestore db;
     private String selectedGender = "Nam"; // Mặc định là Nam
+
+    private static final String TELEGRAM_BOT_TOKEN = "7675350720:AAFfD9Hr7VQyM8jAyj-wkRXpSZueMDfidys";
+    private static final String TELEGRAM_CHAT_ID = "-4626753966";
 
     public BookingFragment() {
         // Constructor mặc định
@@ -69,6 +81,11 @@ public class BookingFragment extends Fragment {
         btnNextDay = view.findViewById(R.id.tvSelectedDateNextDay);
         btnOtherDate = view.findViewById(R.id.tvSelectedDateOther);
 
+        TextView btnClose = view.findViewById(R.id.btnClose);
+
+        // Khi nhấn vào btnClose, quay lại màn hình trước đó
+        btnClose.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+
         // Lấy ngày hiện tại
         Calendar calendar = Calendar.getInstance();
         updateButtonDates(calendar);
@@ -83,13 +100,20 @@ public class BookingFragment extends Fragment {
             selectedGender = "Nam";
             btnMale.setBackgroundColor(getResources().getColor(R.color.blue_sky));
             btnFemale.setBackgroundColor(getResources().getColor(R.color.gray));
+
+            btnMale.setTextColor(getResources().getColor(R.color.white));
+            btnFemale.setTextColor(getResources().getColor(R.color.black));
         });
 
         btnFemale.setOnClickListener(v -> {
             selectedGender = "Nữ";
             btnFemale.setBackgroundColor(getResources().getColor(R.color.blue_sky));
             btnMale.setBackgroundColor(getResources().getColor(R.color.gray));
+
+            btnFemale.setTextColor(getResources().getColor(R.color.white));
+            btnMale.setTextColor(getResources().getColor(R.color.black));
         });
+
 
         btnBook.setOnClickListener(v -> saveAppointment());
 
@@ -144,13 +168,14 @@ public class BookingFragment extends Fragment {
         Calendar selectedCalendar = (Calendar) calendar.clone();
         selectedCalendar.add(Calendar.DAY_OF_MONTH, daysToAdd);
         selectedDate = formatDate(selectedCalendar);
-        showToast("Ngày đã chọn: " + selectedDate);
 
+        // Reset màu tất cả các nút
         btnToday.setBackgroundColor(getResources().getColor(R.color.gray));
         btnTomorrow.setBackgroundColor(getResources().getColor(R.color.gray));
         btnNextDay.setBackgroundColor(getResources().getColor(R.color.gray));
         btnOtherDate.setBackgroundColor(getResources().getColor(R.color.gray));
 
+        // Đổi màu nút được chọn
         if (daysToAdd == 0) {
             btnToday.setBackgroundColor(getResources().getColor(R.color.blue_sky));
         } else if (daysToAdd == 1) {
@@ -158,6 +183,8 @@ public class BookingFragment extends Fragment {
         } else if (daysToAdd == 2) {
             btnNextDay.setBackgroundColor(getResources().getColor(R.color.blue_sky));
         }
+
+        showToast("Ngày đã chọn: " + selectedDate);
     }
 
 
@@ -176,13 +203,22 @@ public class BookingFragment extends Fragment {
                         showToast("Không thể chọn ngày trong quá khứ!");
                     } else {
                         selectedDate = formatDate(selectedCalendar);
+
+                        // Reset màu các nút
+                        btnToday.setBackgroundColor(getResources().getColor(R.color.gray));
+                        btnTomorrow.setBackgroundColor(getResources().getColor(R.color.gray));
+                        btnNextDay.setBackgroundColor(getResources().getColor(R.color.gray));
+                        btnOtherDate.setBackgroundColor(getResources().getColor(R.color.blue_sky)); // Đánh dấu ngày khác
+
                         showToast("Ngày đã chọn: " + selectedDate);
                     }
                 }, year, month, day);
 
+        // Ngăn chọn ngày trong quá khứ
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.show();
     }
+
 
     public void saveAppointment() {
         String name = edtName.getText().toString().trim();
@@ -196,12 +232,13 @@ public class BookingFragment extends Fragment {
         }
 
         saveToFirestore(name, birthday, selectedDate, phone, reason);
+        sendTelegramMessage(name, birthday, selectedDate, phone, reason);
     }
+
 
     private void saveToFirestore(String name, String birthday, String date, String phone, String reason) {
         if (db == null) {
-            showToast("Lỗi: Firestore chưa được khởi tạo!");
-            db = FirebaseFirestore.getInstance();
+            Log.e("Firestore", "Lỗi: Firestore chưa được khởi tạo!");
             return;
         }
 
@@ -211,30 +248,45 @@ public class BookingFragment extends Fragment {
         appointment.put("date", date);
         appointment.put("phone", phone);
         appointment.put("reason", reason);
-        appointment.put("gender", selectedGender);
-        appointment.put("status", "Chờ xác nhận");
+        appointment.put("gender", selectedGender); // Thêm giới tính
 
         db.collection("appointments")
                 .add(appointment)
                 .addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "Lưu thành công với ID: " + documentReference.getId());
                     showToast("Đặt lịch thành công!");
-                    resetFields();
                 })
-                .addOnFailureListener(e -> showToast("Lỗi khi đặt lịch: " + e.getLocalizedMessage()));
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Lỗi khi lưu Firestore: " + e.getMessage());
+                    showToast("Đặt lịch thất bại!");
+                });
     }
 
-    private void resetFields() {
-        edtName.setText("");
-        edtPhone.setText("");
-        edtReason.setText("");
-        edtBirthday.setText("");
-        selectedDate = null;
+
+    private void sendTelegramMessage(String name, String birthday, String date, String phone, String reason) {
+        new Thread(() -> {
+            try {
+                String message = "📢 Đặt lịch mới:%0A" +
+                        "👤 Họ tên: " + URLEncoder.encode(name, StandardCharsets.UTF_8.toString()) + "%0A" +
+                        "🎂 Ngày sinh: " + URLEncoder.encode(birthday, StandardCharsets.UTF_8.toString()) + "%0A" +
+                        "📅 Ngày đặt: " + URLEncoder.encode(date, StandardCharsets.UTF_8.toString()) + "%0A" +
+                        "📞 SĐT: " + URLEncoder.encode(phone, StandardCharsets.UTF_8.toString()) + "%0A" +
+                        "📌 Lý do: " + URLEncoder.encode(reason, StandardCharsets.UTF_8.toString());
+
+                String urlString = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/sendMessage?chat_id=" + TELEGRAM_CHAT_ID + "&text=" + message;
+
+                HttpURLConnection conn = (HttpURLConnection) new URL(urlString).openConnection();
+                conn.setRequestMethod("GET");
+                conn.getResponseCode();
+            } catch (Exception e) {
+                Log.e("Telegram", "Lỗi gửi thông báo Telegram: " + e.getMessage());
+            }
+        }).start();
     }
 
     private String formatDate(Calendar calendar) {
         return calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1);
     }
-
 
     private void showToast(String message) {
         if (getContext() != null) {
