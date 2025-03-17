@@ -15,7 +15,6 @@ public class AppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
-        // Nhận dữ liệu từ Intent
         String fragmentType = getIntent().getStringExtra("fragment_type");
 
         if (fragmentType != null) {
