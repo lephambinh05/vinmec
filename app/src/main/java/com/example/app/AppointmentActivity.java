@@ -13,7 +13,31 @@ public class AppointmentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_appointment);
+
+        // Nhận dữ liệu từ Intent
+        String fragmentType = getIntent().getStringExtra("fragment_type");
+
+        if (fragmentType != null) {
+            if (fragmentType.equals("booking")) {
+                showBookingFragment();
+            } else if (fragmentType.equals("quick_booking")) {
+                showQuickBookingFragment();
+            }
+        }
     }
+
+    private void showBookingFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_Appointment, new NoAppointmentFragment())
+                .commit();
+    }
+
+    // Phương thức hiển thị trang quick booking
+    private void showQuickBookingFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_Appointment, new BookingFragment())
+                .commit();
+    }
+
 }

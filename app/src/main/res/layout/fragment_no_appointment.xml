@@ -61,6 +61,7 @@
                         android:layout_height="100dp"
                         android:src="@drawable/heart"/>
                     <Button
+                        android:id="@+id/btnBooking"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/blue_sky"

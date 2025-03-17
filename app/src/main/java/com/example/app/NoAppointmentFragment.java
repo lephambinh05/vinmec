@@ -3,10 +3,13 @@ package com.example.app;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +61,18 @@ public class NoAppointmentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_no_appointment, container, false);
+        View view = inflater.inflate(R.layout.fragment_no_appointment, container, false);
+        Button btnBooking = view.findViewById(R.id.btnBooking);
+
+        btnBooking.setOnClickListener(v -> replaceFragment(new BookingFragment()));
+
+        return view;
+    }
+    private void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_Appointment, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
