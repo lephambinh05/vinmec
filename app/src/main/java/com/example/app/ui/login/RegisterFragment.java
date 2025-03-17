@@ -89,7 +89,7 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    // Hàm chuyển Fragment
+    // Hàm chuyển Fragment nhé
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();

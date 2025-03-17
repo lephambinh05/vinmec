@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.firestore)
 
+
+
     // Firebase Authentication
     implementation("com.google.firebase:firebase-auth:22.3.1")
 
@@ -54,6 +56,7 @@ dependencies {
     //Gson
     implementation("com.google.code.gson:gson:2.8.7")
     implementation(libs.firebase.database)
+    implementation(libs.firebase.storage)
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -61,4 +64,6 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+
 }

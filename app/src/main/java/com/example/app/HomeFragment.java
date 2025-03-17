@@ -20,10 +20,13 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
         LinearLayout bookingLayout = view.findViewById(R.id.layout_booking);
         LinearLayout layoutBooking = view.findViewById(R.id.layoutBooking);
+        LinearLayout layoutCustomerCare = view.findViewById(R.id.layoutCustomerCare);
+        LinearLayout layoutContact = view.findViewById(R.id.layoutContact);
+        LinearLayout layoutPrescription = view.findViewById(R.id.layoutPrescription); // Thêm ID này vào XML
 
+        // Mở trang đặt lịch hẹn
         bookingLayout.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AppointmentActivity.class);
             intent.putExtra("fragment_type", "booking");
@@ -36,17 +39,29 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-
-        LinearLayout layoutCustomerCare = view.findViewById(R.id.layoutCustomerCare);
+        // Mở trang chăm sóc khách hàng
         layoutCustomerCare.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CustomerCareActivity.class);
             startActivity(intent);
         });
-        LinearLayout layoutContact = view.findViewById(R.id.layoutContact);
+
+        // Mở trang liên hệ
         layoutContact.setOnClickListener(v -> {
             BottomSheetContact bottomSheet = new BottomSheetContact(requireContext());
             bottomSheet.showBottomSheet();
         });
+
+        // Khi nhấn vào "Đơn thuốc", mở PrescriptionFragment
+        layoutPrescription.setOnClickListener(v -> openPrescriptionFragment());
+
         return view;
+    }
+
+    private void openPrescriptionFragment() {
+        PrescriptionFragment prescriptionFragment = new PrescriptionFragment();
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, prescriptionFragment); // `fragment_container` là ID của `FrameLayout`
+        transaction.addToBackStack(null); // Cho phép quay lại
+        transaction.commit();
     }
 }
