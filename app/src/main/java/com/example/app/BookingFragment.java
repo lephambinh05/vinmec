@@ -23,6 +23,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.OutputStream;
@@ -231,24 +233,32 @@ public class BookingFragment extends Fragment {
             return;
         }
 
-        saveToFirestore(name, birthday, selectedDate, phone, reason);
+        // Lấy userId từ Firebase Authentication
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            showToast("Bạn cần đăng nhập để đặt lịch!");
+            return;
+        }
+        String userId = currentUser.getUid();
+
+        saveToFirestore(userId, name, birthday, selectedDate, phone, reason);
         sendTelegramMessage(name, birthday, selectedDate, phone, reason);
     }
 
-
-    private void saveToFirestore(String name, String birthday, String date, String phone, String reason) {
+    private void saveToFirestore(String userId, String name, String birthday, String date, String phone, String reason) {
         if (db == null) {
             Log.e("Firestore", "Lỗi: Firestore chưa được khởi tạo!");
             return;
         }
 
         Map<String, Object> appointment = new HashMap<>();
+        appointment.put("userId", userId); // Lưu userId
         appointment.put("name", name);
         appointment.put("birthday", birthday);
         appointment.put("date", date);
         appointment.put("phone", phone);
         appointment.put("reason", reason);
-        appointment.put("gender", selectedGender); // Thêm giới tính
+        appointment.put("gender", selectedGender);
 
         db.collection("appointments")
                 .add(appointment)
@@ -261,6 +271,7 @@ public class BookingFragment extends Fragment {
                     showToast("Đặt lịch thất bại!");
                 });
     }
+
 
 
     private void sendTelegramMessage(String name, String birthday, String date, String phone, String reason) {

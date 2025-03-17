@@ -1,42 +1,69 @@
 package com.example.app;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class AppointmentActivity extends AppCompatActivity {
+
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
 
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         String fragmentType = getIntent().getStringExtra("fragment_type");
 
         if (fragmentType != null) {
-            if (fragmentType.equals("booking")) {
-                showBookingFragment();
-            } else if (fragmentType.equals("quick_booking")) {
-                showQuickBookingFragment();
+            switch (fragmentType) {
+                case "booking":
+                case "quick_booking":
+                    showFragment(new BookingFragment());
+                    break;
+                case "schedule":
+                    checkAppointments();
+                    break;
             }
         }
     }
 
-    private void showBookingFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_Appointment, new NoAppointmentFragment())
-                .commit();
+    private void checkAppointments() {
+        if (auth.getCurrentUser() == null) {
+            showFragment(new NoAppointmentFragment());
+            return;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+
+        db.collection("appointments")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot result = task.getResult();
+                        if (result != null && !result.isEmpty()) {
+                            showFragment(new AppointmentScheduleFragment());
+                        } else {
+                            showFragment(new NoAppointmentFragment());
+                        }
+                    } else {
+                        showFragment(new NoAppointmentFragment());
+                    }
+                });
     }
 
-    // Phương thức hiển thị trang quick booking
-    private void showQuickBookingFragment() {
+    private void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_Appointment, new BookingFragment())
+                .replace(R.id.fragment_Appointment, fragment)
                 .commit();
     }
-
 }

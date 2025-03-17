@@ -1,38 +1,28 @@
 package com.example.app;
 
 public class Appointment {
-    private String title; // Thêm thuộc tính title
     private String date;
-    private String time;
-    private String userId;
+    private String gender;
+    private String name;
+    private String phone;
+    private String reason;
+    private String userId; // Thêm userId
 
-    // Constructor mặc định cần thiết cho Firebase
     public Appointment() {}
 
-    public Appointment(String title, String date, String time, String userId) {
-        this.title = title;
+    public Appointment(String date, String gender, String name, String phone, String reason, String userId) {
         this.date = date;
-        this.time = time;
-        this.userId = userId;
+        this.gender = gender;
+        this.name = name;
+        this.phone = phone;
+        this.reason = reason;
+        this.userId = userId; // Gán giá trị userId
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
+    public String getDate() { return date; }
+    public String getGender() { return gender; }
+    public String getName() { return name; }
+    public String getPhone() { return phone; }
+    public String getReason() { return reason; }
+    public String getUserId() { return userId; } // Getter cho userId
 }

@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundregister"
     tools:context=".ui.login.RegisterActivity">
     <Button
         android:text="."
@@ -13,7 +14,9 @@
         android:id="@+id/btBack"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/arrow_back_24dp_5f6368_fill0_wght400_grad0_opsz24"/>
+        android:padding="12dp"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/arrow_back_24dp_5f6368_fill0_wght400_grad0_opsz24"/>
     <TextView
         android:id="@+id/tvDK"
         android:layout_width="match_parent"
@@ -121,7 +124,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="28dp"
-        android:background="@color/white"
         android:text="Giới tính"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +27,7 @@ public class HistoryPrescriptionFragment extends Fragment {
     private PrescriptionAdapter adapter;
     private List<Prescription> prescriptionList;
     private FirebaseFirestore firestore;
+    private Button btnAddPrescription;
 
     public HistoryPrescriptionFragment() {
         // Constructor rỗng
@@ -42,6 +45,19 @@ public class HistoryPrescriptionFragment extends Fragment {
         prescriptionList = new ArrayList<>();
         adapter = new PrescriptionAdapter(getActivity(), prescriptionList);
         recyclerView.setAdapter(adapter);
+
+        btnAddPrescription = view.findViewById(R.id.btnAddPrescription);
+        btnAddPrescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment newFragment = new PrescriptionFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_Prescription, newFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
 
         fetchPrescriptions();
 

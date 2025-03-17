@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#F9F9F9">
+    android:background="#F9F9F9"
+    android:fitsSystemWindows="true">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPrescriptions"
@@ -12,6 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:scrollbars="vertical"/>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddPrescription"

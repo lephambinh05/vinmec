@@ -2,6 +2,7 @@ package com.example.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeFragment extends Fragment {
+    private static final String TAG = "HomeFragment";
 
     @Nullable
     @Override
@@ -23,7 +29,14 @@ public class HomeFragment extends Fragment {
         LinearLayout layoutBooking = view.findViewById(R.id.layoutBooking);
         LinearLayout layoutCustomerCare = view.findViewById(R.id.layoutCustomerCare);
         LinearLayout layoutContact = view.findViewById(R.id.layoutContact);
-        LinearLayout layoutPrescription = view.findViewById(R.id.layoutPrescription); // Thêm ID này vào XML
+        LinearLayout layoutPrescription = view.findViewById(R.id.layoutPrescription);
+        LinearLayout layoutLichHen = view.findViewById(R.id.layoutLichHen);
+
+        layoutLichHen.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AppointmentActivity.class);
+            intent.putExtra("fragment_type", "schedule");
+            startActivity(intent);
+        });
 
         // Mở trang đặt lịch hẹn
         bookingLayout.setOnClickListener(v -> {
@@ -57,10 +70,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void openHistoryPrescriptionFragment() {
-        HistoryPrescriptionFragment historyFragment = new HistoryPrescriptionFragment();
-        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, historyFragment); // `fragment_container` là ID của `FrameLayout`
-        transaction.addToBackStack(null); // Cho phép quay lại
-        transaction.commit();
+        Intent intent = new Intent(getActivity(), PrescriptionActivity.class);
+        startActivity(intent);
     }
+
 }
