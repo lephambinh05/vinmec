@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class HomeFragment extends Fragment {
@@ -51,16 +50,16 @@ public class HomeFragment extends Fragment {
             bottomSheet.showBottomSheet();
         });
 
-        // Khi nhấn vào "Đơn thuốc", mở PrescriptionFragment
-        layoutPrescription.setOnClickListener(v -> openPrescriptionFragment());
+        // Khi nhấn vào "Đơn thuốc", mở HistoryPrescriptionFragment
+        layoutPrescription.setOnClickListener(v -> openHistoryPrescriptionFragment());
 
         return view;
     }
 
-    private void openPrescriptionFragment() {
-        PrescriptionFragment prescriptionFragment = new PrescriptionFragment();
+    private void openHistoryPrescriptionFragment() {
+        HistoryPrescriptionFragment historyFragment = new HistoryPrescriptionFragment();
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, prescriptionFragment); // `fragment_container` là ID của `FrameLayout`
+        transaction.replace(R.id.fragment_container, historyFragment); // `fragment_container` là ID của `FrameLayout`
         transaction.addToBackStack(null); // Cho phép quay lại
         transaction.commit();
     }
