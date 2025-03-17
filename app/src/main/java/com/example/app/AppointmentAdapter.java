@@ -3,16 +3,23 @@ package com.example.app;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.ViewHolder> {
     private List<Appointment> appointmentList;
-
+    private FirebaseFirestore db;
     public AppointmentAdapter(List<Appointment> appointmentList) {
         this.appointmentList = appointmentList;
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -30,6 +37,21 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
         holder.textPhone.setText("SĐT: " + (appointment.getPhone() != null ? appointment.getPhone() : "Không có SĐT"));
         holder.txtGender.setText("Giới tính: " + (appointment.getGender() != null ? appointment.getGender() : "Chưa chon giới tính"));
         holder.txtReason.setText("Lí do: " + (appointment.getReason() != null ? appointment.getReason() : "Chưa có lí do"));
+
+        holder.btnCancel.setOnClickListener(v -> {
+            String appointmentId = appointment.getId();  // Đảm bảo có ID của document
+            db.collection("appointments").document(appointmentId)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(holder.itemView.getContext(), "Hủy lịch thành công", Toast.LENGTH_SHORT).show();
+                        appointmentList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, appointmentList.size());
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(holder.itemView.getContext(), "Lỗi khi hủy lịch", Toast.LENGTH_SHORT).show();
+                    });
+        });
     }
 
     @Override
@@ -40,7 +62,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textName, textDate, textPhone, txtGender,txtReason;
-
+        Button btnCancel;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.textName);
@@ -48,6 +70,7 @@ public class AppointmentAdapter extends RecyclerView.Adapter<AppointmentAdapter.
             textPhone = itemView.findViewById(R.id.textPhone);
             txtGender = itemView.findViewById(R.id.textGender);
             txtReason = itemView.findViewById(R.id.textReason);
+            btnCancel = itemView.findViewById(R.id.btnCancelAppointment);
         }
     }
 }

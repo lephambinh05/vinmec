@@ -66,6 +66,7 @@ public class AppointmentScheduleFragment extends Fragment {
     }
 
     private void loadAppointments() {
+        if (currentUser == null) return;
 
         String userId = currentUser.getUid();
         Log.d("FirestoreCheck", "🔍 Truy vấn lịch hẹn cho userId: " + userId);
@@ -78,6 +79,7 @@ public class AppointmentScheduleFragment extends Fragment {
                     appointmentList.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Appointment appointment = document.toObject(Appointment.class);
+                        appointment.setId(document.getId()); // Lưu ID Firestore vào đối tượng
                         Log.d("FirestoreCheck", "📄 Lịch hẹn: " + document.getId() + " - " + document.getData());
                         appointmentList.add(appointment);
                     }

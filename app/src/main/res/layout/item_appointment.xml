@@ -39,4 +39,12 @@
         android:layout_height="wrap_content"
         android:text="Lí do: "
         android:textSize="14sp" />
+    <Button
+        android:id="@+id/btnCancelAppointment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hủy"
+        android:backgroundTint="@color/red"
+        android:textColor="@android:color/white"/>
+
 </LinearLayout>
