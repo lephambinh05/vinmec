@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.app.MainActivity;
 import com.example.app.R;
 import com.example.app.data.model.User;
+import com.example.app.utils.SessionManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button buttonLogin, buttonRegister;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +31,17 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        sessionManager = new SessionManager(this); // Khởi tạo SessionManager
 
         edEmail = findViewById(R.id.edUser);
         edPassword = findViewById(R.id.edPass);
         buttonLogin = findViewById(R.id.btLogin);
         buttonRegister = findViewById(R.id.btRegis);
+
+        // Kiểm tra nếu đã đăng nhập thì vào thẳng MainActivity
+        if (sessionManager.isLoggedIn()) {
+            navigateToMainActivity();
+        }
 
         buttonLogin.setOnClickListener(view -> loginUser());
         buttonRegister.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
@@ -69,12 +76,20 @@ public class LoginActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
                         Log.d("Firestore", "Dữ liệu người dùng: " + user.getUsername());
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
+
+                        // Lưu phiên đăng nhập
+                        sessionManager.saveLoginSession(userId);
+
+                        navigateToMainActivity();
                     } else {
                         Toast.makeText(LoginActivity.this, "Không tìm thấy dữ liệu người dùng!", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(LoginActivity.this, "Lỗi khi tải dữ liệu!", Toast.LENGTH_LONG).show());
+    }
+
+    private void navigateToMainActivity() {
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
     }
 }

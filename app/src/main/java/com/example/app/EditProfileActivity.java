@@ -1,98 +1,98 @@
 package com.example.app;
 
-import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private EditText etName;
-    private EditText etEmail;
-    private EditText etPhone;
-    private EditText etBio;
-    private Button btnSave;
-    private Button btnCancel;
+    private EditText etName, etPhone;
+    private Button btnSave, btnCancel;
+    private FirebaseFirestore db;
+    private FirebaseUser currentUser;
+    private DocumentReference userRef;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        // Khởi tạo các view
         etName = findViewById(R.id.et_name);
-        etEmail = findViewById(R.id.et_email);
         etPhone = findViewById(R.id.et_phone);
-        etBio = findViewById(R.id.et_bio);
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.btn_cancel);
 
-        // Lấy thông tin hiện tại và hiển thị
-        loadCurrentProfileInfo();
+        db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveProfileInfo();
-                finish();
+        if (currentUser != null) {
+            userRef = db.collection("users").document(currentUser.getUid());
+            loadUserProfile();
+        } else {
+            Toast.makeText(this, "Người dùng chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        btnSave.setOnClickListener(v -> saveUserProfile());
+        btnCancel.setOnClickListener(v -> finish());
+    }
+
+    private void loadUserProfile() {
+        if (userRef == null) return;
+
+        userRef.addSnapshotListener((snapshot, error) -> {
+            if (error != null) {
+                Toast.makeText(this, "Lỗi tải dữ liệu: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+            if (snapshot != null && snapshot.exists()) {
+                etName.setText(snapshot.getString("username"));
+                etPhone.setText(snapshot.getString("phone"));
             }
         });
     }
 
-    private void loadCurrentProfileInfo() {
-        // Đây là nơi bạn sẽ lấy dữ liệu người dùng hiện tại
-        // Ví dụ với SharedPreferences:
+    private void saveUserProfile() {
+        if (userRef == null) return;
 
-        SharedPreferences preferences = getSharedPreferences("UserData", MODE_PRIVATE);
-        String name = preferences.getString("name", "");
-        String email = preferences.getString("email", "");
-        String phone = preferences.getString("phone", "");
-        String bio = preferences.getString("bio", "");
-
-        etName.setText(name);
-        etEmail.setText(email);
-        etPhone.setText(phone);
-        etBio.setText(bio);
-    }
-
-    private void saveProfileInfo() {
         String name = etName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
-        String bio = etBio.getText().toString().trim();
 
         if (name.isEmpty()) {
             etName.setError("Tên không được để trống");
             return;
         }
-
-        if (email.isEmpty()) {
-            etEmail.setError("Email không được để trống");
+        if (phone.isEmpty()) {
+            etPhone.setError("Số điện thoại không được để trống");
             return;
         }
 
-        // Lưu thông tin vào SharedPreferences
-        SharedPreferences preferences = getSharedPreferences("UserData", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("name", name);
-        editor.putString("email", email);
-        editor.putString("phone", phone);
-        editor.putString("bio", bio);
-        editor.apply();
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", name);
+        userData.put("phone", phone);
 
-        Toast.makeText(this, "Lưu thông tin thành công", Toast.LENGTH_SHORT).show();
+        userRef.update(userData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Lưu thông tin thành công", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Lỗi khi lưu dữ liệu: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
     }
 }
