@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -26,9 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.NonNull;
-
 public class PrescriptionFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -37,6 +36,7 @@ public class PrescriptionFragment extends Fragment {
     private Uri imageUri;
     private ProgressBar progressBar;
 
+    private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore;
     private StorageReference storageReference;
 
@@ -49,7 +49,8 @@ public class PrescriptionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_prescription, container, false);
 
-        // Khởi tạo Firestore & Firebase Storage
+        // Khởi tạo Firebase Auth, Firestore & Storage
+        firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
 
@@ -84,6 +85,12 @@ public class PrescriptionFragment extends Fragment {
     }
 
     private void uploadPrescription() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null) {
+            Toast.makeText(getActivity(), "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (imageUri == null) {
             Toast.makeText(getActivity(), "Vui lòng chọn ảnh đơn thuốc!", Toast.LENGTH_SHORT).show();
             return;
@@ -98,7 +105,7 @@ public class PrescriptionFragment extends Fragment {
                     // Lấy URL ảnh sau khi upload thành công
                     fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
-                        saveToFirestore(imageUrl);
+                        saveToFirestore(imageUrl, user.getUid()); // Lưu vào Firestore kèm UID
                     }).addOnFailureListener(e -> {
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(getActivity(), "Lỗi lấy URL ảnh: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -112,8 +119,7 @@ public class PrescriptionFragment extends Fragment {
                 });
     }
 
-
-    private void saveToFirestore(String imageUrl) {
+    private void saveToFirestore(String imageUrl, String userId) {
         String hoTen = edtHoTen.getText().toString().trim();
         String soDienThoai = edtSoDienThoai.getText().toString().trim();
         String ghiChu = edtGhiChu.getText().toString().trim();
@@ -126,6 +132,7 @@ public class PrescriptionFragment extends Fragment {
 
         // Tạo đối tượng để lưu vào Firestore
         Map<String, Object> prescription = new HashMap<>();
+        prescription.put("userId", userId);
         prescription.put("hoTen", hoTen);
         prescription.put("soDienThoai", soDienThoai);
         prescription.put("ghiChu", ghiChu);
@@ -143,5 +150,4 @@ public class PrescriptionFragment extends Fragment {
                     e.printStackTrace();
                 });
     }
-
 }

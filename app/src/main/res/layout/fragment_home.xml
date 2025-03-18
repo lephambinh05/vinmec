@@ -142,42 +142,8 @@
                                 android:textColor="#000"
                                 android:gravity="center" />
                         </LinearLayout>
-
                         <LinearLayout
-                            android:layout_width="65dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:layout_marginHorizontal="10sp"
-                            android:padding="8dp">
-
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/rounded_full_corner"
-                                android:src="@drawable/kimtiem"
-                                android:clipToOutline="true"
-                                android:contentDescription="Image description" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Sổ tiêm"
-                                android:textSize="14sp"
-                                android:textColor="#000"
-                                android:gravity="center" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/layoutPrescription"
-                        android:layout_width="wrap_content"
-                        android:layout_height="120dp"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
+                            android:id="@+id/layoutPrescription"
                             android:layout_width="65dp"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
@@ -203,33 +169,93 @@
                                 android:gravity="center" />
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="65dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:gravity="center_horizontal"
-                            android:layout_marginHorizontal="10sp"
-                            android:padding="8dp">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="65dp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:orientation="vertical"-->
+<!--                            android:gravity="center_horizontal"-->
+<!--                            android:layout_marginHorizontal="10sp"-->
+<!--                            android:padding="8dp">-->
 
-                            <ImageView
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/rounded_full_corner"
-                                android:src="@drawable/kimtiem"
-                                android:clipToOutline="true"
-                                android:contentDescription="Image description" />
+<!--                            <ImageView-->
+<!--                                android:layout_width="50dp"-->
+<!--                                android:layout_height="50dp"-->
+<!--                                android:background="@drawable/rounded_full_corner"-->
+<!--                                android:src="@drawable/kimtiem"-->
+<!--                                android:clipToOutline="true"-->
+<!--                                android:contentDescription="Image description" />-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:text="Sổ tiêm"
-                                android:textSize="14sp"
-                                android:textColor="#000"
-                                android:gravity="center" />
-                        </LinearLayout>
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginTop="4dp"-->
+<!--                                android:text="Sổ tiêm"-->
+<!--                                android:textSize="14sp"-->
+<!--                                android:textColor="#000"-->
+<!--                                android:gravity="center" />-->
+<!--                        </LinearLayout>-->
 
                     </LinearLayout>
+
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/layoutPrescription"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="120dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--&lt;!&ndash;                        <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_width="65dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:orientation="vertical"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:gravity="center_horizontal"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_marginRight="10sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:padding="8dp">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_width="50dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_height="50dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:background="@drawable/rounded_full_corner"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:src="@drawable/medicine"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:clipToOutline="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:contentDescription="Image description" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_marginTop="4dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:text="Đơn thuốc"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:textSize="14sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:textColor="#000"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:gravity="center" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        </LinearLayout>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_width="65dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:orientation="vertical"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:gravity="center_horizontal"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:layout_marginHorizontal="10sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                            android:padding="8dp">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_width="50dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_height="50dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:background="@drawable/rounded_full_corner"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:src="@drawable/kimtiem"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:clipToOutline="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:contentDescription="Image description" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_marginTop="4dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:text="Sổ tiêm"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:textSize="14sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:textColor="#000"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:gravity="center" />&ndash;&gt;-->
+<!--&lt;!&ndash;                        </LinearLayout>&ndash;&gt;-->
+
+<!--                    </LinearLayout>-->
 
                 </LinearLayout>
             </HorizontalScrollView>

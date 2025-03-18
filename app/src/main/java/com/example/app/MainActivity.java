@@ -13,7 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
@@ -28,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         // Khởi tạo Firebase
         FirebaseApp.initializeApp(this);
@@ -46,27 +49,28 @@ public class MainActivity extends AppCompatActivity {
 
         // Load màn hình chính khi ứng dụng mở
         if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
+            loadFragment(new HomeFragment()); // Load HomeFragment mặc định
         }
     }
 
-
-
-
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_account) {
-                    // Khi chọn "Tài khoản" → Mở UserProfileActivity
-                    openUserProfile();
+                if (item.getItemId() == R.id.nav_home) {
+                    loadFragment(new HomeFragment()); // Hiển thị HomeFragment khi chọn "Home"
+                    return true;
+                } else if (item.getItemId() == R.id.nav_account) {
+                    openUserProfile(); // Mở UserProfileActivity khi chọn "Tài khoản"
                     return true;
                 }
                 return false;
             }
         });
     }
+
 
     private void openUserProfile() {
         Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);

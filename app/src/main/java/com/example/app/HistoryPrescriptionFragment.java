@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.app.adapters.PrescriptionAdapter;
 import com.example.app.models.Prescription;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,6 +29,7 @@ public class HistoryPrescriptionFragment extends Fragment {
     private PrescriptionAdapter adapter;
     private List<Prescription> prescriptionList;
     private FirebaseFirestore firestore;
+    private FirebaseAuth firebaseAuth;
     private Button btnAddPrescription;
 
     public HistoryPrescriptionFragment() {
@@ -42,22 +45,19 @@ public class HistoryPrescriptionFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         firestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         prescriptionList = new ArrayList<>();
         adapter = new PrescriptionAdapter(getActivity(), prescriptionList);
         recyclerView.setAdapter(adapter);
 
         btnAddPrescription = view.findViewById(R.id.btnAddPrescription);
-        btnAddPrescription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment newFragment = new PrescriptionFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_Prescription, newFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
+        btnAddPrescription.setOnClickListener(v -> {
+            Fragment newFragment = new PrescriptionFragment();
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_Prescription, newFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
-
 
         fetchPrescriptions();
 
@@ -65,7 +65,16 @@ public class HistoryPrescriptionFragment extends Fragment {
     }
 
     private void fetchPrescriptions() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null) {
+            Toast.makeText(getActivity(), "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = user.getUid();  // Lấy UID của người dùng hiện tại
+
         firestore.collection("don_thuoc")
+                .whereEqualTo("userId", userId)  // Lọc đơn thuốc theo userId
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     prescriptionList.clear();
