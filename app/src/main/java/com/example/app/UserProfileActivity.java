@@ -34,7 +34,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private CircleImageView ivAvatar;
     private TextView tvEmail, tvUsername, tvGender, tvPhone;
     private Button btnEditProfile,btnLogout;
-
     // Khai báo Firebase
     private FirebaseAuth mAuth;
     private FirebaseStorage storage;
@@ -97,7 +96,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void loadUserProfile() {
         // Hiển thị email từ FirebaseAuth

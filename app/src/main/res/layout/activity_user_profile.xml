@@ -32,6 +32,7 @@
                     app:civ_border_color="#FFFFFF"
                     app:civ_border_width="3dp" />
 
+                
                 <TextView
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
