@@ -12,6 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         tools:targetApi="31">
+        <activity android:name=".PrescriptionActivity" />
+
 
         <activity
             android:name=".CustomerCareActivity"
