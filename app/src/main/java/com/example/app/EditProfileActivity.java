@@ -22,7 +22,7 @@ import java.util.Map;
 public class EditProfileActivity extends AppCompatActivity {
 
     private EditText etName, etPhone;
-    private Button btnSave, btnCancel;
+    private Button btnSave, btnCancel, btnBack;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private DocumentReference userRef;
@@ -36,6 +36,10 @@ public class EditProfileActivity extends AppCompatActivity {
         etPhone = findViewById(R.id.et_phone);
         btnSave = findViewById(R.id.btn_save);
         btnCancel = findViewById(R.id.btn_cancel);
+
+        btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(v -> finish());
 
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();

@@ -32,7 +32,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private CircleImageView ivAvatar;
     private TextView tvEmail, tvUsername, tvGender, tvPhone;
-    private Button btnEditProfile, btnLogout;
+    private Button btnEditProfile, btnLogout,btnBack;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
@@ -75,6 +75,10 @@ public class UserProfileActivity extends AppCompatActivity {
         tvPhone = findViewById(R.id.tv_phone);
         btnEditProfile = findViewById(R.id.btn_edit_profile);
         btnLogout = findViewById(R.id.btn_logout);
+        btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(v -> finish());
+
 
         btnLogout.setOnClickListener(v -> logout());
 

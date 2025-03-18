@@ -30,7 +30,7 @@ public class HistoryPrescriptionFragment extends Fragment {
     private List<Prescription> prescriptionList;
     private FirebaseFirestore firestore;
     private FirebaseAuth firebaseAuth;
-    private Button btnAddPrescription;
+    private Button btnAddPrescription,btnBack;
 
     public HistoryPrescriptionFragment() {
         // Constructor rỗng
@@ -58,6 +58,10 @@ public class HistoryPrescriptionFragment extends Fragment {
             transaction.addToBackStack(null);
             transaction.commit();
         });
+
+        btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+
 
         fetchPrescriptions();
 

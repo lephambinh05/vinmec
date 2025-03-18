@@ -3,15 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="#F9F9F9"
     android:fitsSystemWindows="true">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:paddingTop="15dp"
+        android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:paddingLeft="15dp"
+            android:drawableTint="@color/black"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@drawable/arrow_back_24dp_5f6368_fill0_wght400_grad0_opsz24"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Đơn thuốc"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:drawablePadding="8dp"
+            android:paddingStart="16dp"/>
+    </FrameLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewPrescriptions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:padding="10dp"
         android:scrollbars="vertical"/>
 
 
@@ -23,5 +47,5 @@
         android:textAllCaps="false"
         android:backgroundTint="#E91E63"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="8dp"/>
+        android:layout_margin="10dp"/>
 </LinearLayout>

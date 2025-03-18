@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,7 @@ public class AppointmentScheduleFragment extends Fragment {
     private AppointmentAdapter adapter;
     private List<Appointment> appointmentList;
     private FirebaseFirestore db;
+    private Button btnBack;
     private FirebaseUser currentUser;
     public AppointmentScheduleFragment() {
         // Required empty public constructor
@@ -45,6 +47,11 @@ public class AppointmentScheduleFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_appointment_schedule, container, false);
+
+        btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+
+
 
         recyclerView = view.findViewById(R.id.recyclerViewAppointments);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

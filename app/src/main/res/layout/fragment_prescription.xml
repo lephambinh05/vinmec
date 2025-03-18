@@ -3,38 +3,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     android:padding="16dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:paddingLeft="15dp"
+            android:drawableTint="@color/black"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_vertical"
+            android:drawableLeft="@drawable/arrow_back_24dp_5f6368_fill0_wght400_grad0_opsz24"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Thêm đơn thuốc"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:drawablePadding="8dp"
+            android:paddingStart="16dp"/>
+    </FrameLayout>
     <EditText
         android:id="@+id/edtHoTen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#F3FBFB"
+        android:background="@drawable/rounded_corner"
+        android:drawableLeft="@drawable/pen_line_svgrepo_com"
+        android:drawablePadding="10dp"
         android:hint="Họ và Tên" />
 
     <EditText
         android:id="@+id/edtSoDienThoai"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:padding="10dp"
+        android:backgroundTint="#F3FBFB"
         android:hint="Số điện thoại"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/baseline_phone_24"
+        android:drawablePadding="10dp"
         android:inputType="phone" />
 
     <EditText
         android:id="@+id/edtGhiChu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:padding="10dp"
+        android:backgroundTint="#F3FBFB"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/baseline_notes_24"
+        android:drawablePadding="10dp"
         android:hint="Ghi chú" />
 
     <ImageView
+        android:layout_marginTop="20dp"
         android:id="@+id/imgDonThuoc"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/lightGray" />
 
     <Button
         android:id="@+id/btnUpload"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:backgroundTint="@color/accentColor"
         android:text="Chọn ảnh đơn thuốc" />
 
     <ProgressBar
@@ -47,5 +93,7 @@
         android:id="@+id/btnGui"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:backgroundTint="@color/accentColor"
         android:text="Gửi đơn thuốc" />
 </LinearLayout>

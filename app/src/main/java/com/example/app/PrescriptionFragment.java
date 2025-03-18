@@ -62,6 +62,10 @@ public class PrescriptionFragment extends Fragment {
         Button btnUpload = view.findViewById(R.id.btnUpload);
         Button btnGui = view.findViewById(R.id.btnGui);
 
+        Button btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+
+
         btnUpload.setOnClickListener(v -> openFileChooser());
         btnGui.setOnClickListener(v -> uploadPrescription());
 

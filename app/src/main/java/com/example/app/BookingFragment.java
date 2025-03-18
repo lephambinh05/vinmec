@@ -38,7 +38,7 @@ public class BookingFragment extends Fragment {
 
     private EditText edtName, edtPhone, edtReason, edtBirthday;
     private Button btnMale, btnFemale, btnBook;
-    private Button btnToday, btnTomorrow, btnNextDay, btnOtherDate;
+    private Button btnToday, btnTomorrow, btnNextDay, btnOtherDate,btnBack;
     private String selectedDate = null;
     private FirebaseFirestore db;
     private String selectedGender = "Nam"; // Mặc định là Nam
@@ -74,6 +74,7 @@ public class BookingFragment extends Fragment {
         edtReason = view.findViewById(R.id.editTextReason);
         edtBirthday = view.findViewById(R.id.editTextDate);
 
+        btnBack = view.findViewById(R.id.btnBack);
         btnMale = view.findViewById(R.id.btnMale);
         btnFemale = view.findViewById(R.id.btnFemale);
         btnBook = view.findViewById(R.id.btnBook);
@@ -83,10 +84,10 @@ public class BookingFragment extends Fragment {
         btnNextDay = view.findViewById(R.id.tvSelectedDateNextDay);
         btnOtherDate = view.findViewById(R.id.tvSelectedDateOther);
 
-        TextView btnClose = view.findViewById(R.id.btnClose);
 
         // Khi nhấn vào btnClose, quay lại màn hình trước đó
-        btnClose.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
+
 
         // Lấy ngày hiện tại
         Calendar calendar = Calendar.getInstance();

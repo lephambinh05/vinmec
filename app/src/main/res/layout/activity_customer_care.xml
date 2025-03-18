@@ -13,13 +13,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <FrameLayout
+            android:paddingTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:id="@+id/btnBack"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:drawableLeft="@drawable/close_24dp_5f6368_fill0_wght400_grad0_opsz24"
-                android:padding="5dp"
+                android:padding="15dp"
                 android:backgroundTint="@color/white"
                 android:drawableTint="@color/black"
                 />
@@ -29,7 +31,7 @@
                 android:layout_gravity="center"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:text="Thông tin cần hỗ trợ"/>
         </FrameLayout>
         <LinearLayout
