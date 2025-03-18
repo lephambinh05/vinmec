@@ -8,11 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,9 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import java.util.UUID;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -36,13 +32,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 100;
 
     private CircleImageView ivAvatar;
-    private TextView tvName;
-    private TextView tvEmail;
-    private TextView tvUsername;
-    private TextView tvGender;
-    private TextView tvPhone;
-    private Button btnEditProfile;
-    private Button btnLogout;
+    private TextView tvEmail, tvUsername, tvGender, tvPhone;
+    private Button btnEditProfile,btnLogout;
 
     // Khai báo Firebase
     private FirebaseAuth mAuth;
@@ -75,7 +66,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void initViews() {
         ivAvatar = findViewById(R.id.iv_avatar);
-        tvName = findViewById(R.id.tv_name);
+
         tvEmail = findViewById(R.id.tv_email);
         tvUsername = findViewById(R.id.tv_username);
         tvGender = findViewById(R.id.tv_gender);
@@ -111,13 +102,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private void loadUserProfile() {
         // Hiển thị email từ FirebaseAuth
         tvEmail.setText(currentUser.getEmail());
-
-        // Hiển thị tên từ FirebaseAuth
-        if (currentUser.getDisplayName() != null && !currentUser.getDisplayName().isEmpty()) {
-            tvName.setText(currentUser.getDisplayName());
-        } else {
-            tvName.setText("Người dùng");
-        }
 
         // Hiển thị ảnh đại diện từ FirebaseAuth nếu có
         Uri photoUrl = currentUser.getPhotoUrl();
