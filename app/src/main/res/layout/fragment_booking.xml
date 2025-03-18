@@ -35,10 +35,7 @@
                 android:textSize="40sp"
                 android:layout_marginLeft="10sp"
                 android:layout_marginTop="2sp"
-                android:drawableLeft="@drawable/baseline_close_24"
-                android:clickable="true"
-                android:focusable="true"/>
-
+                android:drawableLeft="@drawable/baseline_close_24"/>
         </FrameLayout>
 
         <!-- Phần còn lại (chiếm 8 phần màn hình) -->

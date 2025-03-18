@@ -49,4 +49,10 @@
     <color name="brown">#795548</color>
     <color name="brown_dark">#5D4037</color>
     <color name="brown_light">#D7CCC8</color>
+
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#03A9F4</color>
+    <color name="lightGray">#E0E0E0</color>
+    <color name="darkGray">#757575</color>
 </resources>

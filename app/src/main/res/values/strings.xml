@@ -17,4 +17,14 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="default_username">Username</string>
+    <string name="default_email">name@gmail.com</string>
+    <string name="edit_profile">Chỉnh sửa hồ sơ</string>
+    <string name="settings">Cài đặt</string>
+    <string name="name">Họ và tên</string>
+    <string name="email">Email</string>
+    <string name="phone">Số điện thoại</string>
+    <string name="bio">Giới thiệu bản thân</string>
+    <string name="save">Lưu</string>
+    <string name="cancel">Hủy</string>
 </resources>

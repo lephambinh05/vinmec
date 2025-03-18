@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/hospital_svgrepo_com"
-        android:tint="@color/white"
-        android:title="Home"/>
+        android:title="Home"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/baseline_attach_file_24"
-        android:title="Hồ sơ"/>
+        android:title="Hồ sơ"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/nav_booking"
         android:icon="@drawable/baseline_calendar_month_24"
-        android:title="Đặt lịch"/>
+        android:title="Đặt lịch"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/nav_notifications"
         android:icon="@drawable/baseline_circle_notifications_24"
-        android:title="Thông báo"/>
+        android:title="Thông báo"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/nav_account"
         android:icon="@drawable/baseline_account_circle_24"
-        android:title="Tài khoản"/>
-
+        android:title="Tài khoản"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"/>
 </menu>
-
