@@ -66,6 +66,18 @@ public class HomeFragment extends Fragment {
         // Khi nhấn vào "Đơn thuốc", mở HistoryPrescriptionFragment
         layoutPrescription.setOnClickListener(v -> openHistoryPrescriptionFragment());
 
+        // Tìm LinearLayout của nút "Mua thuốc"
+        LinearLayout layoutBuyMedicine = view.findViewById(R.id.layoutBuyMedicine);
+
+        // Thêm sự kiện onClick để chuyển sang MedicineListFragment
+        layoutBuyMedicine.setOnClickListener(v -> {
+            MedicineListFragment medicineListFragment = new MedicineListFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, medicineListFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
         return view;
     }
 
@@ -73,5 +85,4 @@ public class HomeFragment extends Fragment {
         Intent intent = new Intent(getActivity(), PrescriptionActivity.class);
         startActivity(intent);
     }
-
 }

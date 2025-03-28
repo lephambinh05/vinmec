@@ -55,20 +55,32 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!validateInput(username, password, confirmPassword, email)) return;
 
-        // Đăng ký trên Firebase Authentication
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         if (firebaseUser != null) {
-                            // Lưu dữ liệu vào Firestore
-                            saveUserToFirestore(firebaseUser.getUid(), username, email, phone);
+                            firebaseUser.sendEmailVerification()
+                                    .addOnCompleteListener(verifyTask -> {
+                                        if (verifyTask.isSuccessful()) {
+                                            Toast.makeText(RegisterActivity.this,
+                                                    "Email xác minh đã được gửi. Vui lòng kiểm tra hộp thư!",
+                                                    Toast.LENGTH_LONG).show();
+
+                                            // Chuyển sang trang xác minh email
+                                            finish();
+                                        } else {
+                                            Toast.makeText(RegisterActivity.this,
+                                                    "Lỗi gửi email xác minh!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     } else {
                         Toast.makeText(RegisterActivity.this, "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
+
 
     private void saveUserToFirestore(String userId, String username, String email, String phone) {
         int gender = (radioGroupGender.getCheckedRadioButtonId() == R.id.radioButtonFemale) ? 0 : 1;
