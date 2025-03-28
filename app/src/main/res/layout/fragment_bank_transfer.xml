@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thanh toán qua chuyển khoản ngân hàng"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/bank_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ngân hàng: [Tên ngân hàng]\nSố tài khoản: [Số tài khoản]\nChủ tài khoản: [Tên chủ tài khoản]"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/transaction_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nội dung chuyển khoản: [Nội dung]\nSố tiền: [Số tiền] VNĐ"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <ImageView
+            android:id="@+id/qr_code_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Mã QR thanh toán" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Quét mã QR để thanh toán"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/complete_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hoàn tất" />
+    </LinearLayout>
+</ScrollView>
