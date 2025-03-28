@@ -1,0 +1,64 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/etHeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Chiều cao (cm)"
+            android:inputType="numberDecimal" />
+
+        <EditText
+            android:id="@+id/etWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cân nặng (kg)"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/spinnerBloodType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/etMedicalHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tiền sử bệnh lý"
+            android:inputType="textMultiLine"
+            android:minHeight="100dp" />
+
+        <EditText
+            android:id="@+id/etAllergy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dị ứng"
+            android:inputType="textMultiLine"
+            android:minHeight="100dp" />
+
+        <Switch
+            android:id="@+id/switchSmoking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hút thuốc" />
+
+        <Switch
+            android:id="@+id/switchDrinking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Uống rượu bia" />
+
+        <Button
+            android:id="@+id/btnSaveHealthInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lưu" />
+    </LinearLayout>
+</ScrollView>

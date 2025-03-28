@@ -15,16 +15,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class CartFragment extends Fragment {
     private LinearLayout cartContainer;
@@ -146,34 +145,14 @@ public class CartFragment extends Fragment {
                             return;
                         }
 
-                        WriteBatch batch = db.batch();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String medicineName = document.getString("medicineName");
-                            Long price = document.getLong("price");
-                            Long quantity = document.getLong("quantity");
-
-                            if (medicineName != null && price != null && quantity != null) {
-                                Map<String, Object> order = new HashMap<>();
-                                order.put("medicineName", medicineName);
-                                order.put("price", price * quantity);
-                                order.put("userId", userId);
-                                order.put("timestamp", System.currentTimeMillis());
-
-                                batch.set(db.collection("Orders").document(), order);
-                                batch.delete(document.getReference());
-                            }
-                        }
-
-                        batch.commit()
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(getContext(), "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
-                                    loadCartItems("");
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(getContext(), "Lỗi khi thanh toán: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                });
+                        // Chuyển sang màn hình nhập thông tin giao dịch
+                        CheckoutInfoFragment checkoutInfoFragment = new CheckoutInfoFragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, checkoutInfoFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
                     } else {
-                        Toast.makeText(getContext(), "Lỗi khi thanh toán: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Lỗi khi kiểm tra giỏ hàng: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

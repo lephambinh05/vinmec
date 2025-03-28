@@ -27,4 +27,24 @@
     <string name="bio">Giới thiệu bản thân</string>
     <string name="save">Lưu</string>
     <string name="cancel">Hủy</string>
+    //
+    <string name="gender">Giới tính</string>
+    <string name="medical_id">Mã y tế</string>
+    <string name="additional_info">Thông tin bổ sung</string>
+    <string name="id_passport">Số CCCD/Hộ chiếu</string>
+    <string name="job">Nghề nghiệp</string>
+    <string name="address">Địa chỉ</string>
+    <string name="nationality">Quốc tịch</string>
+    <string name="ethnicity">Dân tộc</string>
+    <string-array name="blood_types">
+        <item>A+</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+        <item>O+</item>
+        <item>O-</item>
+    </string-array>
+
 </resources>

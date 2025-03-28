@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etCMT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số CMT/Hộ chiếu" />
+
+    <EditText
+        android:id="@+id/etJob"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nghề nghiệp" />
+
+    <EditText
+        android:id="@+id/etAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Địa chỉ" />
+
+    <EditText
+        android:id="@+id/etNationality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Quốc tịch" />
+
+    <EditText
+        android:id="@+id/etEthnicity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dân tộc" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu"
+        android:backgroundTint="@color/gray"
+        android:textColor="@android:color/white" />
+</LinearLayout>

@@ -1,9 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NotificationFragment">
+    android:orientation="vertical"
+    android:padding="16dp">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgAvatar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_avatar_default" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvUserNameProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:paddingTop="8dp" />
+
+    <TextView
+        android:id="@+id/tv_personal_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thông tin cá nhân"
+        android:textSize="16sp"
+        android:drawableLeft="@drawable/baseline_account_circle_24"
+        android:padding="8dp"
+        android:background="@android:color/darker_gray" />
+
+    <TextView
+        android:id="@+id/tv_health_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thông tin sức khỏe"
+        android:textSize="16sp"
+        android:drawableLeft="@drawable/baseline_people_alt_24"
+        android:padding="8dp"
+        android:background="@android:color/darker_gray" />
+</LinearLayout>
