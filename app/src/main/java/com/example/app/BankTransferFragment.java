@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.work.Data;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +35,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class BankTransferFragment extends Fragment {
     private TextView bankInfoText, transactionInfoText;
@@ -43,6 +47,7 @@ public class BankTransferFragment extends Fragment {
     private long totalAmount = 0;
     private String bankName, accountNumber, accountHolder;
     private String transactionContent;
+    private String orderId;
 
     @Nullable
     @Override
@@ -82,8 +87,23 @@ public class BankTransferFragment extends Fragment {
                 .addOnSuccessListener(document -> {
                     if (document.exists()) {
                         bankName = document.getString("bankName");
-                        accountNumber = document.getString("accountNumber");
                         accountHolder = document.getString("accountHolder");
+
+                        // Xử lý accountNumber
+                        Object accountNumberObj = document.get("accountNumber");
+                        if (accountNumberObj != null) {
+                            if (accountNumberObj instanceof String) {
+                                accountNumber = (String) accountNumberObj;
+                            } else if (accountNumberObj instanceof Number) {
+                                accountNumber = String.valueOf(((Number) accountNumberObj).longValue());
+                            } else {
+                                Toast.makeText(getContext(), "Số tài khoản không hợp lệ!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Số tài khoản không tồn tại!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         // Hiển thị thông tin ngân hàng
                         bankInfoText.setText("Ngân hàng: " + bankName + "\nSố tài khoản: " + accountNumber + "\nChủ tài khoản: " + accountHolder);
@@ -106,10 +126,9 @@ public class BankTransferFragment extends Fragment {
     }
 
     private void generateTransactionContent() {
-        // Tạo nội dung giao dịch: DH_<userId>_<timestamp>_<random>
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(new Date());
-        String randomNum = String.format("%04d", new Random().nextInt(10000)); // Số ngẫu nhiên 4 chữ số
-        transactionContent = "DH_" + randomNum;
+        String randomNum = String.format("%04d", new Random().nextInt(10000));
+        transactionContent = "DH" + randomNum;
     }
 
     private void calculateTotalAmount() {
@@ -140,16 +159,13 @@ public class BankTransferFragment extends Fragment {
     private void generateQRCode(String accountNumber, long amount, String transactionContent) {
         new Thread(() -> {
             try {
-                // Tạo URL API VietQR.io
                 String urlString = "https://img.vietqr.io/image/" + bankName + "-" + accountNumber + "-compact.jpg?amount=" + amount + "&addInfo=" + transactionContent;
                 URL url = new URL(urlString);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
 
-                // Kiểm tra mã phản hồi
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
-                    // Tải hình ảnh QR từ URL
                     getActivity().runOnUiThread(() -> {
                         Glide.with(getContext())
                                 .load(urlString)
@@ -171,7 +187,7 @@ public class BankTransferFragment extends Fragment {
     }
 
     private void completeOrder(String transactionContent) {
-        // Lưu đơn hàng vào Firestore
+        // Lưu đơn hàng vào Firestore với trạng thái "Pending"
         db.collection("Cart").document(userId).collection("Items").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -196,9 +212,12 @@ public class BankTransferFragment extends Fragment {
                                 order.put("address", address);
                                 order.put("paymentMethod", "Bank Transfer");
                                 order.put("transactionContent", transactionContent);
+                                order.put("totalAmount", totalAmount);
+                                order.put("status", "Pending");
                                 order.put("timestamp", System.currentTimeMillis());
 
                                 DocumentReference orderRef = db.collection("Orders").document();
+                                orderId = orderRef.getId();
                                 batch.set(orderRef, order);
                                 batch.delete(document.getReference());
                             }
@@ -206,12 +225,11 @@ public class BankTransferFragment extends Fragment {
 
                         batch.commit()
                                 .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(getContext(), "Đặt hàng thành công! Vui lòng chuyển khoản để hoàn tất.", Toast.LENGTH_SHORT).show();
-                                    // Quay lại màn hình chính
-                                    getActivity().getSupportFragmentManager().popBackStack(null, getActivity().getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragment_container, new HomeFragment());
-                                    transaction.commit();
+                                    Toast.makeText(getContext(), "Đặt hàng thành công! Đang chờ xác nhận giao dịch...", Toast.LENGTH_SHORT).show();
+                                    // Lập lịch kiểm tra định kỳ
+                                    scheduleTransactionCheck();
+                                    // Điều hướng về màn hình chính
+                                    navigateToHome();
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getContext(), "Lỗi khi đặt hàng: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -220,5 +238,32 @@ public class BankTransferFragment extends Fragment {
                         Toast.makeText(getContext(), "Lỗi khi đặt hàng: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void scheduleTransactionCheck() {
+        // Tạo dữ liệu đầu vào cho Worker
+        Data inputData = new Data.Builder()
+                .putString("orderId", orderId)
+                .putString("transactionContent", transactionContent)
+                .putLong("totalAmount", totalAmount)
+                .putString("accountNumber", accountNumber)
+                .build();
+
+        // Tạo yêu cầu công việc định kỳ (mỗi 30 giây, tối thiểu 15 phút theo WorkManager)
+        PeriodicWorkRequest transactionCheckRequest =
+                new PeriodicWorkRequest.Builder(TransactionCheckWorker.class, 15, TimeUnit.MINUTES)
+                        .setInputData(inputData)
+                        .addTag("transaction_check_" + orderId)
+                        .build();
+
+        // Lập lịch công việc
+        WorkManager.getInstance(getContext()).enqueue(transactionCheckRequest);
+    }
+
+    private void navigateToHome() {
+        getActivity().getSupportFragmentManager().popBackStack(null, getActivity().getSupportFragmentManager().POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new HomeFragment());
+        transaction.commit();
     }
 }

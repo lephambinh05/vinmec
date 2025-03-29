@@ -46,6 +46,11 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.firestore)
 
+    implementation("androidx.work:work-runtime:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation ("androidx.work:work-runtime:2.9.0")
+    implementation ("com.google.guava:guava:33.0.0-android")
+
 
 
 
