@@ -13,9 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.work.Data;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,8 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -74,6 +72,15 @@ public class BankTransferFragment extends Fragment {
             fullName = bundle.getString("fullName");
             phoneNumber = bundle.getString("phoneNumber");
             address = bundle.getString("address");
+        } else {
+            Toast.makeText(getContext(), "Thiếu thông tin người dùng!", Toast.LENGTH_SHORT).show();
+            return view;
+        }
+
+        // Kiểm tra thông tin người dùng
+        if (fullName == null || phoneNumber == null || address == null) {
+            Toast.makeText(getContext(), "Vui lòng cung cấp đầy đủ thông tin người dùng!", Toast.LENGTH_SHORT).show();
+            return view;
         }
 
         // Lấy thông tin ngân hàng từ Firestore
@@ -114,8 +121,8 @@ public class BankTransferFragment extends Fragment {
                         // Hiển thị nội dung giao dịch (tạm thời, số tiền sẽ được cập nhật sau)
                         transactionInfoText.setText("Nội dung chuyển khoản: " + transactionContent + "\nSố tiền: Đang tính toán...");
 
-                        // Tính tổng số tiền từ giỏ hàng
-                        calculateTotalAmount();
+                        // Tính tổng số tiền và lấy danh sách thuốc
+                        calculateTotalAmountAndOrderItems();
                     } else {
                         Toast.makeText(getContext(), "Không tìm thấy thông tin ngân hàng!", Toast.LENGTH_SHORT).show();
                     }
@@ -131,27 +138,91 @@ public class BankTransferFragment extends Fragment {
         transactionContent = "DH" + randomNum;
     }
 
-    private void calculateTotalAmount() {
+    private void calculateTotalAmountAndOrderItems() {
         db.collection("Cart").document(userId).collection("Items").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        totalAmount = 0;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Long price = document.getLong("price");
-                            Long quantity = document.getLong("quantity");
-                            if (price != null && quantity != null) {
-                                totalAmount += price * quantity;
-                            }
+                        if (task.getResult().isEmpty()) {
+                            Toast.makeText(getContext(), "Giỏ hàng trống!", Toast.LENGTH_SHORT).show();
+                            return;
                         }
 
-                        // Cập nhật giao diện với số tiền
-                        transactionInfoText.setText("Nội dung chuyển khoản: " + transactionContent + "\nSố tiền: " + totalAmount + " VNĐ");
+                        totalAmount = 0;
+                        JSONArray orderItemsArray = new JSONArray();
 
-                        // Tạo mã QR qua VietQR.io
-                        generateQRCode(accountNumber, totalAmount, transactionContent);
+                        // Duyệt qua từng mục trong giỏ hàng
+                        for (QueryDocumentSnapshot cartItem : task.getResult()) {
+                            String medicineName = cartItem.getString("medicineName");
+                            Long quantity = cartItem.getLong("quantity");
 
-                        // Gán sự kiện cho nút "Hoàn tất"
-                        completeButton.setOnClickListener(v -> completeOrder(transactionContent));
+                            if (medicineName == null || quantity == null) {
+                                Toast.makeText(getContext(), "Dữ liệu giỏ hàng không hợp lệ!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            // Truy vấn bảng medicine (thay vì Medicines)
+                            db.collection("medicine")
+                                    .whereEqualTo("name_Pro", medicineName)
+                                    .get()
+                                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                                        if (!queryDocumentSnapshots.isEmpty()) {
+                                            for (QueryDocumentSnapshot medicineDoc : queryDocumentSnapshots) {
+                                                String amountStr = medicineDoc.getString("Amount");
+                                                Long price = medicineDoc.getLong("Price");
+
+                                                if (amountStr == null || price == null) {
+                                                    Toast.makeText(getContext(), "Dữ liệu thuốc không hợp lệ: " + medicineName, Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+
+                                                // Chuyển Amount từ string sang số
+                                                int amountInStock;
+                                                try {
+                                                    amountInStock = Integer.parseInt(amountStr);
+                                                } catch (NumberFormatException e) {
+                                                    Toast.makeText(getContext(), "Số lượng thuốc không hợp lệ: " + medicineName, Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+
+                                                // Kiểm tra số lượng trong kho
+                                                if (amountInStock < quantity) {
+                                                    Toast.makeText(getContext(), "Không đủ số lượng trong kho cho thuốc: " + medicineName, Toast.LENGTH_SHORT).show();
+                                                    return;
+                                                }
+
+                                                // Tính tổng tiền
+                                                totalAmount += price * quantity;
+
+                                                // Tạo JSON object cho mỗi mục thuốc
+                                                try {
+                                                    JSONObject item = new JSONObject();
+                                                    item.put("medicineName", medicineName);
+                                                    item.put("price", price);
+                                                    item.put("quantity", quantity);
+                                                    orderItemsArray.put(item);
+                                                } catch (Exception e) {
+                                                    Toast.makeText(getContext(), "Lỗi khi tạo danh sách thuốc: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                // Cập nhật giao diện với số tiền
+                                                transactionInfoText.setText("Nội dung chuyển khoản: " + transactionContent + "\nSố tiền: " + totalAmount + " VNĐ");
+
+                                                // Tạo mã QR qua VietQR.io
+                                                generateQRCode(accountNumber, totalAmount, transactionContent);
+
+                                                // Gán sự kiện cho nút "Hoàn tất"
+                                                completeButton.setOnClickListener(v -> completeOrder(orderItemsArray.toString()));
+                                            }
+                                        } else {
+                                            Toast.makeText(getContext(), "Không tìm thấy thuốc trong kho: " + medicineName, Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Toast.makeText(getContext(), "Lỗi khi truy vấn thuốc: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Lỗi khi truy vấn giỏ hàng: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -186,7 +257,7 @@ public class BankTransferFragment extends Fragment {
         }).start();
     }
 
-    private void completeOrder(String transactionContent) {
+    private void completeOrder(String orderItemsJson) {
         // Lưu đơn hàng vào Firestore với trạng thái "Pending"
         db.collection("Cart").document(userId).collection("Items").get()
                 .addOnCompleteListener(task -> {
@@ -197,37 +268,34 @@ public class BankTransferFragment extends Fragment {
                         }
 
                         WriteBatch batch = db.batch();
+                        DocumentReference orderRef = db.collection("Orders").document();
+                        orderId = orderRef.getId();
+
+                        // Lưu đơn hàng vào Firestore
+                        Map<String, Object> order = new HashMap<>();
+                        order.put("orderId", orderId);
+                        order.put("userId", userId);
+                        order.put("fullName", fullName);
+                        order.put("phoneNumber", phoneNumber);
+                        order.put("address", address);
+                        order.put("paymentMethod", "Bank Transfer");
+                        order.put("transactionContent", transactionContent);
+                        order.put("totalAmount", totalAmount);
+                        order.put("status", "Pending");
+                        order.put("timestamp", System.currentTimeMillis());
+
+                        batch.set(orderRef, order);
+
+                        // Xóa giỏ hàng sau khi đặt hàng
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            String medicineName = document.getString("medicineName");
-                            Long price = document.getLong("price");
-                            Long quantity = document.getLong("quantity");
-
-                            if (medicineName != null && price != null && quantity != null) {
-                                Map<String, Object> order = new HashMap<>();
-                                order.put("medicineName", medicineName);
-                                order.put("price", price * quantity);
-                                order.put("userId", userId);
-                                order.put("fullName", fullName);
-                                order.put("phoneNumber", phoneNumber);
-                                order.put("address", address);
-                                order.put("paymentMethod", "Bank Transfer");
-                                order.put("transactionContent", transactionContent);
-                                order.put("totalAmount", totalAmount);
-                                order.put("status", "Pending");
-                                order.put("timestamp", System.currentTimeMillis());
-
-                                DocumentReference orderRef = db.collection("Orders").document();
-                                orderId = orderRef.getId();
-                                batch.set(orderRef, order);
-                                batch.delete(document.getReference());
-                            }
+                            batch.delete(document.getReference());
                         }
 
                         batch.commit()
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(getContext(), "Đặt hàng thành công! Đang chờ xác nhận giao dịch...", Toast.LENGTH_SHORT).show();
-                                    // Lập lịch kiểm tra định kỳ
-                                    scheduleTransactionCheck();
+                                    // Lập lịch kiểm tra giao dịch
+                                    scheduleTransactionCheck(orderItemsJson);
                                     // Điều hướng về màn hình chính
                                     navigateToHome();
                                 })
@@ -240,24 +308,18 @@ public class BankTransferFragment extends Fragment {
                 });
     }
 
-    private void scheduleTransactionCheck() {
-        // Tạo dữ liệu đầu vào cho Worker
-        Data inputData = new Data.Builder()
-                .putString("orderId", orderId)
-                .putString("transactionContent", transactionContent)
-                .putLong("totalAmount", totalAmount)
-                .putString("accountNumber", accountNumber)
-                .build();
-
-        // Tạo yêu cầu công việc định kỳ (mỗi 30 giây, tối thiểu 15 phút theo WorkManager)
-        PeriodicWorkRequest transactionCheckRequest =
-                new PeriodicWorkRequest.Builder(TransactionCheckWorker.class, 15, TimeUnit.MINUTES)
-                        .setInputData(inputData)
-                        .addTag("transaction_check_" + orderId)
-                        .build();
-
-        // Lập lịch công việc
-        WorkManager.getInstance(getContext()).enqueue(transactionCheckRequest);
+    private void scheduleTransactionCheck(String orderItemsJson) {
+        // Gọi TransactionCheckWorker.scheduleTransactionCheck() với thông tin người dùng
+        TransactionCheckWorker.scheduleTransactionCheck(
+                getContext(),
+                orderId,
+                transactionContent,
+                accountNumber,
+                orderItemsJson,
+                address,
+                fullName,
+                "Bank Transfer" // Phương thức thanh toán
+        );
     }
 
     private void navigateToHome() {
