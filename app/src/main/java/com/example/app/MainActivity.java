@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.nav_account) {
                     openUserProfile(); // Mở UserProfileActivity khi chọn "Tài khoản"
                     return true;
+                } else if (item.getItemId() == R.id.nav_profile) {
+                    loadFragment(new ProfileFragment()); // Mở UserProfileActivity khi chọn "Tài khoản"
+                    return true;
                 }
                 return false;
             }
@@ -76,4 +79,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
         startActivity(intent);
     }
+
+
 }

@@ -9,12 +9,12 @@
         app:iconTint="@color/white"
         app:showAsAction="ifRoom"/>
 
-<!--    <item-->
-<!--        android:id="@+id/nav_profile"-->
-<!--        android:icon="@drawable/baseline_attach_file_24"-->
-<!--        android:title="Hồ sơ"-->
-<!--        app:iconTint="@color/white"-->
-<!--        app:showAsAction="ifRoom"/>-->
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/baseline_attach_file_24"
+        android:title="Hồ sơ"
+        app:iconTint="@color/white"
+        app:showAsAction="ifRoom"/>
 
 <!--    <item-->
 <!--        android:id="@+id/nav_booking"-->
