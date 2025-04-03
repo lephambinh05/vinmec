@@ -13,25 +13,34 @@
         <!-- Phần đầu (chiếm 2 phần màn hình) -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="70dp">
+            android:layout_height="80dp">
 
             <ImageView
                 android:id="@+id/background_image"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:src="@drawable/background"
                 android:scaleType="centerCrop"
-                android:clipToOutline="true" />
+                android:src="@drawable/background" />
 
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:paddingLeft="15dp"
+                android:drawableTint="@color/black"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center_vertical"
+                android:drawableLeft="@drawable/arrow_back_24dp_5f6368_fill0_wght400_grad0_opsz24"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_arrow_back_24"
+                android:layout_gravity="center"
+                android:text="Lịch hẹn"
                 android:textSize="24sp"
-                android:layout_marginTop="10sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
-                android:text="Lịch hẹn"/>
+                android:textColor="@android:color/black"
+                android:drawablePadding="8dp"
+                android:paddingStart="16dp"/>
         </FrameLayout>
 
         <!-- Phần còn lại (chiếm 8 phần màn hình) -->

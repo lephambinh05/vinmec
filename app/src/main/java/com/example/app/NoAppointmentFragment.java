@@ -64,6 +64,8 @@ public class NoAppointmentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_no_appointment, container, false);
         Button btnBooking = view.findViewById(R.id.btnBooking);
 
+        Button btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
         btnBooking.setOnClickListener(v -> replaceFragment(new BookingFragment()));
 
         return view;

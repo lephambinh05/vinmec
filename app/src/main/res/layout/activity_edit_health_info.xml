@@ -1,17 +1,33 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:paddingVertical="20dp"
+    android:background="@color/white"
+    android:paddingHorizontal="16dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:text="Chỉnh sửa thông tin sức khỏe"/>
         <EditText
             android:id="@+id/etHeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FAF8F8"
+            android:background="@drawable/rounded_corner"
+            android:drawableLeft="@drawable/baseline_account_circle_24"
+            android:drawablePadding="10dp"
+            android:padding="15dp"
+            android:layout_marginBottom="10dp"
             android:hint="Chiều cao (cm)"
             android:inputType="numberDecimal" />
 
@@ -19,9 +35,19 @@
             android:id="@+id/etWeight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FAF8F8"
+            android:background="@drawable/rounded_corner"
+            android:drawableLeft="@drawable/baseline_account_circle_24"
+            android:drawablePadding="10dp"
+            android:padding="15dp"
+            android:layout_marginBottom="10dp"
             android:hint="Cân nặng (kg)"
             android:inputType="numberDecimal" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nhóm máu"/>
         <Spinner
             android:id="@+id/spinnerBloodType"
             android:layout_width="match_parent"
@@ -31,6 +57,12 @@
             android:id="@+id/etMedicalHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FAF8F8"
+            android:background="@drawable/rounded_corner"
+            android:drawableLeft="@drawable/baseline_account_circle_24"
+            android:drawablePadding="10dp"
+            android:padding="15dp"
+            android:layout_marginBottom="10dp"
             android:hint="Tiền sử bệnh lý"
             android:inputType="textMultiLine"
             android:minHeight="100dp" />
@@ -39,6 +71,12 @@
             android:id="@+id/etAllergy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FAF8F8"
+            android:background="@drawable/rounded_corner"
+            android:drawableLeft="@drawable/baseline_account_circle_24"
+            android:drawablePadding="10dp"
+            android:padding="15dp"
+            android:layout_marginBottom="10dp"
             android:hint="Dị ứng"
             android:inputType="textMultiLine"
             android:minHeight="100dp" />
@@ -56,6 +94,7 @@
             android:text="Uống rượu bia" />
 
         <Button
+            android:backgroundTint="@color/blue_sky"
             android:id="@+id/btnSaveHealthInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

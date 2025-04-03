@@ -28,9 +28,12 @@
         android:layout_height="wrap_content"
         android:text="Thông tin cá nhân"
         android:textSize="16sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:drawableLeft="@drawable/baseline_account_circle_24"
-        android:padding="8dp"
-        android:background="@android:color/darker_gray" />
+        android:padding="15dp"
+        android:backgroundTint="@color/blue_light"
+        android:background="@drawable/rounded_corner" />
 
     <TextView
         android:id="@+id/tv_health_info"
@@ -39,6 +42,7 @@
         android:text="Thông tin sức khỏe"
         android:textSize="16sp"
         android:drawableLeft="@drawable/baseline_people_alt_24"
-        android:padding="8dp"
-        android:background="@android:color/darker_gray" />
+        android:padding="15dp"
+        android:backgroundTint="@color/blue_light"
+        android:background="@drawable/rounded_corner" />
 </LinearLayout>

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="16dp">
 
     <!-- Phần cố định: Tìm kiếm -->
     <LinearLayout
@@ -19,14 +20,16 @@
             android:layout_height="wrap_content"
             android:hint="Tìm kiếm trong giỏ hàng..."
             android:padding="8dp"
-            android:background="@android:drawable/edit_text" />
+            android:background="@drawable/rounded_corner" />
 
         <Button
             android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tìm kiếm"
-            android:layout_marginStart="8dp" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="14dp"
+            android:backgroundTint="@color/blue_sky"
+            android:drawableLeft="@drawable/find_magnifier_magnifying_glass_svgrepo_com"
+            android:layout_marginStart="8dp"  />
     </LinearLayout>
 
     <!-- Phần cuộn: Danh sách sản phẩm trong giỏ hàng -->
@@ -48,5 +51,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Thanh toán"
+        android:backgroundTint="@color/blue_sky"
         android:layout_marginTop="16dp" />
 </LinearLayout>

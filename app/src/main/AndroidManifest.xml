@@ -20,6 +20,11 @@
             android:name=".PrescriptionActivity"
             android:exported="false" />
 
+        <activity android:name=".EditPersonalInfoActivity"
+            android:exported="false"/>
+        <activity android:name=".EditHealthInfoActivity"
+            android:exported="false"/>
+
         <activity
             android:name=".CustomerCareActivity"
             android:exported="false" />

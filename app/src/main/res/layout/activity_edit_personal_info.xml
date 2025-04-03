@@ -3,36 +3,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/white"
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="16dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"
+        android:text="Chỉnh sửa thông tin cá nhân"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
+        android:text="Số chứng minh thư / Hộ chiếu"/>
     <EditText
         android:id="@+id/etCMT"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FAF8F8"
+        android:background="@drawable/rounded_corner"
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
         android:hint="Số CMT/Hộ chiếu" />
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
+        android:text="Nghề nghiệp"/>
     <EditText
         android:id="@+id/etJob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nghề nghiệp" />
+        android:backgroundTint="#FAF8F8"
+        android:background="@drawable/rounded_corner"
 
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Nghề nghiệp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
+        android:text="Địa chỉ"/>
     <EditText
         android:id="@+id/etAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Địa chỉ" />
+        android:backgroundTint="#FAF8F8"
+        android:background="@drawable/rounded_corner"
 
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Địa chỉ" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
+        android:text="Quốc tịch"/>
     <EditText
         android:id="@+id/etNationality"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Quốc tịch" />
+        android:backgroundTint="#FAF8F8"
+        android:background="@drawable/rounded_corner"
 
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
+        android:hint="Quốc tịch" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginBottom="4dp"
+        android:text="Dân tộc"/>
     <EditText
         android:id="@+id/etEthnicity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#FAF8F8"
+        android:background="@drawable/rounded_corner"
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:layout_marginBottom="10dp"
         android:hint="Dân tộc" />
 
     <Button
@@ -40,6 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Lưu"
-        android:backgroundTint="@color/gray"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/blue_sky"
         android:textColor="@android:color/white" />
 </LinearLayout>

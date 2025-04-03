@@ -87,7 +87,6 @@ public class CartFragment extends Fragment {
                                 if (searchQuery.isEmpty() || medicineName.toLowerCase().contains(searchQuery.toLowerCase())) {
                                     LinearLayout itemLayout = new LinearLayout(getContext());
                                     itemLayout.setOrientation(LinearLayout.HORIZONTAL);
-                                    itemLayout.setPadding(16, 16, 16, 16);
                                     itemLayout.setBackgroundResource(android.R.drawable.list_selector_background);
 
                                     ImageView cartImage = new ImageView(getContext());

@@ -35,6 +35,7 @@
         android:textSize="16sp" />
 
     <Button
+        android:backgroundTint="@color/blue_sky"
         android:id="@+id/add_to_cart_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
